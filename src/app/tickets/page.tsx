@@ -1,5 +1,6 @@
 import { initialTickets } from "@/data";
 import Link from "next/link";
+import { ticketPath } from "@/paths";
 
 export default async function Ticketspage() {
   return (
@@ -9,7 +10,7 @@ export default async function Ticketspage() {
         {initialTickets.map(ticket => (
           <div key={ticket.id}>
             <h2>{ticket.title}</h2>
-            <Link href={`/tickets/${ticket.id}`} className="text-sm underline">View</Link>
+            <Link href={ticketPath(ticket.id)} className="text-sm underline">View</Link>
           </div>
         ))}
       </div>
