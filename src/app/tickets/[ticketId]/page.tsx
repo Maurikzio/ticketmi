@@ -1,3 +1,5 @@
+import { initialTickets } from "@/app/data";
+
 type TicketPageProps = {
   params: {
     ticketId: string;
@@ -6,10 +8,18 @@ type TicketPageProps = {
 
 export default async function Ticketpage({ params }: TicketPageProps) {
   const { ticketId } = await params;
+  const ticket = initialTickets.find((t) => t.id === ticketId);
+
+  if (!ticket) {
+    return (
+      <p>Ticket not found</p>
+    )
+  }
 
   return (
     <div className="min-h-screen p-8 pb-20 font-[family-name:var(--font-geist-sans)]">
-      <h2>Ticket Page {ticketId}</h2>
+      <h2>Ticket Page {ticket.title}</h2>
+      <p className="text-sm">{ticket.content}</p>
     </div>
   );
 }
