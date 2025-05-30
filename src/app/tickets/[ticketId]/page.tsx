@@ -17,7 +17,7 @@ export default async function Ticketpage({ params }: TicketPageProps) {
   }
 
   return (
-    <div className="min-h-screen p-8 pb-20 font-[family-name:var(--font-geist-sans)]">
+    <div className="font-[family-name:var(--font-geist-sans)]">
       <h2>Ticket Page {ticket.title}</h2>
       <p className="text-sm">{ticket.content}</p>
     </div>
