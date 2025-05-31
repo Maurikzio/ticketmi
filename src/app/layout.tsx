@@ -4,6 +4,7 @@ import "./globals.css";
 import { homePath, ticketsPath } from "@/paths";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button"
+import { SquareChartGantt } from "lucide-react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -42,7 +43,10 @@ export default function RootLayout({
             {/* <Button asChild variant="outline">
               <Link href={homePath}>Home</Link>
             </Button> */}
-            <Link href={homePath} className={buttonVariants({ variant: "outline" })}>Home</Link>
+            <Link href={homePath} className={buttonVariants({ variant: "ghost" })}>
+              <SquareChartGantt />
+              <h1 className=" text-lg font-bold">TicketMi</h1>
+            </Link>
           </div>
           <div>
             <Link href={ticketsPath} className={buttonVariants({ variant: "outline" })}>Tickets</Link>
