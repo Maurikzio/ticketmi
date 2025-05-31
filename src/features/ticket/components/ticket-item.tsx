@@ -19,12 +19,13 @@ const TICKET_ICONS = {
 }
 
 interface TicketItemProps {
-  ticket: Ticket
+  ticket: Ticket;
+  isDetail?: boolean;
 }
 
-const TicketItem = ({ ticket }: TicketItemProps) => {
+const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
   return (
-    <div className="w-full max-w-[420px] flex gap-x-1">
+    <div className={clsx("w-full flex gap-x-1", { "max-w-[420px]": !isDetail, "max-w-[580px]": isDetail })}>
       <Card className="w-full ">
         <CardHeader>
           <CardTitle className="flex gap-x-2 items-center">
@@ -34,18 +35,20 @@ const TicketItem = ({ ticket }: TicketItemProps) => {
           <CardDescription>Information of your ticket below.</CardDescription>
         </CardHeader>
         <CardContent>
-          <span className={clsx("line-clamp-3", { "line-through": ticket.status === "DONE" })}>
+          <span className={clsx({ "line-through": ticket.status === "DONE", "line-clamp-3": !isDetail })}>
             {ticket.content}
           </span>
         </CardContent>
       </Card>
-      <div className="flex flex-col gap-y-1">
-        <Button variant="outline" asChild size="icon">
-          <Link href={ticketPath(ticket.id)}>
-            <SquarePen />
-          </Link>
-        </Button>
-      </div>
+      {!isDetail ? (
+        <div className="flex flex-col gap-y-1">
+          <Button variant="outline" asChild size="icon">
+            <Link href={ticketPath(ticket.id)}>
+              <SquarePen />
+            </Link>
+          </Button>
+        </div>
+      ) : null}
     </div>
   )
 };

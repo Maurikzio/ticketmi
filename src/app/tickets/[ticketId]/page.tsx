@@ -3,6 +3,7 @@ import Placeholder from "@/components/placeholder";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ticketsPath } from "@/paths";
+import TicketItem from "@/features/ticket/components/ticket-item";
 
 type TicketPageProps = {
   params: {
@@ -26,9 +27,8 @@ export default async function Ticketpage({ params }: TicketPageProps) {
   }
 
   return (
-    <div className="font-[family-name:var(--font-geist-sans)]">
-      <h2>Ticket Page {ticket.title}</h2>
-      <p className="text-sm">{ticket.content}</p>
+    <div className="font-[family-name:var(--font-geist-sans)] flex justify-center animate-fade-in-from-top">
+      <TicketItem ticket={ticket} isDetail={true} />
     </div>
   );
 }
