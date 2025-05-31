@@ -2,6 +2,13 @@ import { initialTickets } from "@/data";
 import Link from "next/link";
 import { ticketPath } from "@/paths";
 import clsx from "clsx";
+import { Pen, Check, File } from "lucide-react";
+
+const TICKET_ICONS = {
+  "OPEN": <File />,
+  "IN_PROGRESS": <Pen />,
+  "DONE": <Check />
+}
 
 export default async function Ticketspage() {
   return (
@@ -13,6 +20,7 @@ export default async function Ticketspage() {
       <div className="flex-1 flex flex-col items-center gap-y-4 animate-fade-in-from-top">
         {initialTickets.map(ticket => (
           <div key={ticket.id} className="w-full max-w-[420px] p-4 border border-slate-100 rounded">
+            <div>{TICKET_ICONS[ticket.status]}</div>
             <h3 className="text-lg font-semibold truncate">{ticket.title}</h3>
             <p className={clsx("text-sm text-slate-500 truncate", {
               "line-through": ticket.status === "DONE"
