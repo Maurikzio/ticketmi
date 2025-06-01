@@ -2,6 +2,7 @@ import { homePath, ticketsPath } from "@/paths";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button"
 import { SquareChartGantt } from "lucide-react";
+import ThemeSwitcher from "@/components/theme/theme-switcher";
 
 const Header = () => {
   return (
@@ -22,7 +23,8 @@ const Header = () => {
           <h1 className=" text-lg font-bold">TicketMi</h1>
         </Link>
       </div>
-      <div>
+      <div className="flex items-center gap-4">
+        <ThemeSwitcher />
         <Link href={ticketsPath} className={buttonVariants({ variant: "default" })}>Tickets</Link>
       </div>
     </nav>
