@@ -9,8 +9,8 @@ import {
 } from "@/components/ui/card"
 import clsx from "clsx";
 import { Pen, Check, File, SquarePen } from "lucide-react";
-import { Ticket } from "../definitions";
 import { Button } from "@/components/ui/button";
+import { Ticket } from "@prisma/client";
 
 const TICKET_ICONS = {
   "OPEN": <File className="h-4 w-4" />,
