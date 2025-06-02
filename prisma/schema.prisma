@@ -1,0 +1,24 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL") // for migrations
+}
+
+model Ticket {
+  id        String       @id @default(cuid()) //mandatory to be
+  createdAt DateTime     @default(now()) //mandatory to be
+  updatedAt DateTime     @updatedAt //mandatory to be
+  title     String
+  content   String       @db.VarChar(1024)
+  status    TicketStatus @default(OPEN)
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  DONE
+}
