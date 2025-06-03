@@ -8,9 +8,10 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import clsx from "clsx";
-import { Pen, Check, File, SquarePen } from "lucide-react";
+import { Pen, Check, File, SquarePen, TrashIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Ticket } from "@prisma/client";
+import { deleteTicket } from "../actions/delete-ticket";
 
 const TICKET_ICONS = {
   "OPEN": <File className="h-4 w-4" />,
@@ -40,15 +41,21 @@ const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
           </span>
         </CardContent>
       </Card>
-      {!isDetail ? (
-        <div className="flex flex-col gap-y-1">
+      <div className="flex flex-col gap-y-1">
+        {!isDetail ? (
           <Button variant="outline" asChild size="icon">
             <Link href={ticketPath(ticket.id)}>
               <SquarePen />
             </Link>
           </Button>
-        </div>
-      ) : null}
+        ) : (
+          <form action={deleteTicket.bind(null, ticket.id)}>
+            <Button variant="outline" size="icon">
+              <TrashIcon className="h-4 w-4" />
+            </Button>
+          </form>
+        )}
+      </div>
     </div>
   )
 };
