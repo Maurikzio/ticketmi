@@ -44,7 +44,7 @@ const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
       <div className="flex flex-col gap-y-1">
         {!isDetail ? (
           <Button variant="outline" asChild size="icon">
-            <Link href={ticketPath(ticket.id)}>
+            <Link prefetch href={ticketPath(ticket.id)}>
               <SquarePen />
             </Link>
           </Button>
