@@ -4,9 +4,7 @@ import { getTicket } from "@/features/queries/get-ticket";
 import { notFound } from "next/navigation";
 
 type TicketPageProps = {
-  params: {
-    ticketId: string;
-  }
+  params: Promise<{ ticketId: string }>;
 }
 
 export default async function Ticketpage({ params }: TicketPageProps) {
