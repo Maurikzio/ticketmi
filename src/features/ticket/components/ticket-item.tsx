@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ticketEditPath } from "@/paths";
+import { ticketEditPath, ticketPath } from "@/paths";
 import {
   Card,
   CardContent,
@@ -44,7 +44,7 @@ const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
       <div className="flex flex-col gap-y-1">
         {!isDetail ? (
           <Button variant="outline" asChild size="icon">
-            <Link prefetch href={ticketEditPath(ticket.id)}>
+            <Link prefetch href={ticketPath(ticket.id)}>
               <ExternalLink />
             </Link>
           </Button>
@@ -56,7 +56,7 @@ const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
           </form>
         )}
         <Button variant="outline" size="icon" asChild>
-          <Link prefetch href={`/tickets/${ticket.id}/edit`}>
+          <Link prefetch href={ticketEditPath(ticket.id)}>
             <Pencil />
           </Link>
         </Button>
