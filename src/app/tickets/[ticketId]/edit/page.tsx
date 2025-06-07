@@ -4,13 +4,12 @@ import TicketUpdateForm from "@/features/ticket/components/ticket-update-form";
 import { notFound } from "next/navigation";
 
 interface TicketEditPageProps {
-  params: {
-    ticketId: string
-  }
+  params: Promise<{ ticketId: string }>
 }
 
 export default async function TicketEditPage({ params }: TicketEditPageProps) {
-  const ticket = await getTicket(params.ticketId);
+  const { ticketId } = await params;
+  const ticket = await getTicket(ticketId);
 
   if (!ticket) {
     notFound()
