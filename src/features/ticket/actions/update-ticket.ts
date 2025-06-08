@@ -34,7 +34,8 @@ const updateTicket = async (ticketId: string, actionState: FormState, formData: 
   } catch (error) {
     console.error(error)
     return {
-      message: "Something went wrong"
+      message: "Something went wrong",
+      values: { title, content }
     }
   }
 

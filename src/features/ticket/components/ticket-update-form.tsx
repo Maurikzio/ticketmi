@@ -14,7 +14,7 @@ interface TicketUpdateFormProps {
 }
 
 const TicketUpdateForm = ({ ticket }: TicketUpdateFormProps) => {
-  const initialState: FormState = { message: "", errors: {} }
+  const initialState: FormState = { message: "", errors: {}, values: {} }
   const updateTicketWithId = updateTicket.bind(null, ticket.id);
   const [actionState, action] = useActionState(
     updateTicketWithId,
@@ -25,8 +25,13 @@ const TicketUpdateForm = ({ ticket }: TicketUpdateFormProps) => {
     <form action={action} className="flex flex-col gap-4">
       <div className="flex flex-col gap-2">
         <Label htmlFor="title">Title</Label>
-        {/* TODO: replace defaultValue since when error, we will see again the prev value of the input */}
-        <Input type="text" id="title" name="title" placeholder="Title" defaultValue={ticket.title} />
+        <Input
+          type="text"
+          id="title"
+          name="title"
+          placeholder="Title"
+          defaultValue={actionState?.values?.title ?? ticket.title}
+        />
         {actionState.errors?.title ? (
           actionState.errors.title.map(error => (
             <p
@@ -39,7 +44,12 @@ const TicketUpdateForm = ({ ticket }: TicketUpdateFormProps) => {
 
       <div className="flex flex-col gap-2">
         <Label htmlFor="content">Content</Label>
-        <Textarea placeholder="Type the ticket content here." id="content" name="content" defaultValue={ticket.content} />
+        <Textarea
+          placeholder="Type the ticket content here."
+          id="content"
+          name="content"
+          defaultValue={actionState?.values?.content ?? ticket.content}
+        />
         {actionState.errors?.content ? (
           actionState.errors.content.map(error => (
             <p
