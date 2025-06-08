@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma"
 import { ticketsPath } from "@/paths"
 import { revalidatePath } from "next/cache"
 
-const createTicket = async (formData: FormData) => {
+const createTicket = async (actionState: { message?: string }, formData: FormData) => {
   const data = {
     title: formData.get("title"),
     content: formData.get("content")
@@ -16,6 +16,7 @@ const createTicket = async (formData: FormData) => {
     }
   })
   revalidatePath(ticketsPath)
+  return { message: "Ticket created" }
 }
 
 export default createTicket;
