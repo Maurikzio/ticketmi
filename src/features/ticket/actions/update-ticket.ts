@@ -4,25 +4,42 @@ import { prisma } from "@/lib/prisma"
 import { ticketsPath } from "@/paths"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
+import { z } from "zod";
+import { FormState } from "../definitions"
 
-const updateTicket = async (ticketId: string, actionState: { message?: string }, formData: FormData) => {
-  const data = {
+const updateTicketSchema = z.object({
+  title: z.string().min(1).max(191),
+  content: z.string().min(1).max(1024)
+})
+
+const updateTicket = async (ticketId: string, actionState: FormState, formData: FormData) => {
+  const validateFields = updateTicketSchema.safeParse({
     title: formData.get("title"),
     content: formData.get("content")
-  }
-  await prisma.ticket.update({
-    where: {
-      id: ticketId
-    },
-    data: {
-      title: data.title as string,
-      content: data.content as string,
-    }
   })
+
+  if (!validateFields.success) {
+    return {
+      message: "Missing fields. Failed to update ticket",
+      errors: validateFields.error.flatten().fieldErrors
+    }
+  }
+
+  const { title, content } = validateFields.data;
+  try {
+    await prisma.ticket.update({
+      where: { id: ticketId },
+      data: { title, content, }
+    })
+  } catch (error) {
+    console.error(error)
+    return {
+      message: "Something went wrong"
+    }
+  }
 
   revalidatePath(ticketsPath)
   redirect(ticketsPath)
-
 }
 
 export default updateTicket;

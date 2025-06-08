@@ -6,9 +6,10 @@ import { Textarea } from "@/components/ui/textarea";
 import createTicket from "../actions/create-ticket";
 import SubmitButton from "@/components/form/submit-button";
 import { useActionState } from "react";
+import { FormState } from "../definitions";
 
 const TicketCreateForm = () => {
-  const initialState: { message?: string } = { message: '' };
+  const initialState: FormState = { message: "", errors: {} }
   const [actionState, action] = useActionState(createTicket, initialState);
 
   return (
@@ -16,15 +17,31 @@ const TicketCreateForm = () => {
       <div className="flex flex-col gap-2">
         <Label htmlFor="title">Title</Label>
         <Input type="text" id="title" name="title" placeholder="Title" />
+        {actionState.errors?.title ? (
+          actionState.errors.title.map(error => (
+            <p
+              key={error}
+              className='mt-2 text-sm text-red-500'
+            >{error}</p>
+          ))
+        ) : null}
       </div>
 
       <div className="flex flex-col gap-2">
         <Label htmlFor="content">Content</Label>
         <Textarea placeholder="Type the ticket content here." id="content" name="content" />
+        {actionState.errors?.content ? (
+          actionState.errors.content.map(error => (
+            <p
+              key={error}
+              className='mt-2 text-sm text-red-500'
+            >{error}</p>
+          ))
+        ) : null}
       </div>
 
       <SubmitButton label="Create" pendingLabel="Creating" />
-      {actionState.message}
+      <p className="text-sm text-yellow-500">{actionState.message}</p>
     </form>
   )
 }
