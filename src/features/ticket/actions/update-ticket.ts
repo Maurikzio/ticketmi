@@ -3,7 +3,7 @@
 import { prisma } from "@/lib/prisma"
 import { ticketsPath } from "@/paths"
 import { revalidatePath } from "next/cache"
-import { redirect } from "next/navigation"
+// import { redirect } from "next/navigation"
 import { z } from "zod";
 import { FormState } from "../definitions"
 
@@ -12,7 +12,11 @@ const updateTicketSchema = z.object({
   content: z.string().min(1).max(1024)
 })
 
-const updateTicket = async (ticketId: string, actionState: FormState, formData: FormData) => {
+const updateTicket = async (
+  ticketId: string,
+  actionState: FormState,
+  formData: FormData
+): Promise<FormState> => {
   const validateFields = updateTicketSchema.safeParse({
     title: formData.get("title"),
     content: formData.get("content")
@@ -20,8 +24,11 @@ const updateTicket = async (ticketId: string, actionState: FormState, formData: 
 
   if (!validateFields.success) {
     return {
-      message: "Missing fields. Failed to update ticket",
-      errors: validateFields.error.flatten().fieldErrors
+      errors: validateFields.error.flatten().fieldErrors,
+      values: {
+        title: formData.get("title") as string,
+        content: formData.get("content") as string
+      }
     }
   }
 
@@ -35,12 +42,17 @@ const updateTicket = async (ticketId: string, actionState: FormState, formData: 
     console.error(error)
     return {
       message: "Something went wrong",
+      status: "error",
       values: { title, content }
     }
   }
 
   revalidatePath(ticketsPath)
-  redirect(ticketsPath)
+  return {
+    message: "Ticket updated successfully!",
+    status: "success"
+  }
+  // redirect(ticketsPath) // keep this commented for now to allow toast to show
 }
 
 export default updateTicket;

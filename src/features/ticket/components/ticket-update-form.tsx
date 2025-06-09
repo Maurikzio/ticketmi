@@ -8,18 +8,33 @@ import updateTicket from "../actions/update-ticket";
 import SubmitButton from "@/components/form/submit-button";
 import { useActionState } from "react";
 import { FormState } from "../definitions";
+import { useEffect } from "react";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface TicketUpdateFormProps {
   ticket: Ticket
 }
 
 const TicketUpdateForm = ({ ticket }: TicketUpdateFormProps) => {
-  const initialState: FormState = { message: "", errors: {}, values: {} }
+  const router = useRouter();
+  const initialState: FormState = { message: "", status: "idle", errors: {}, values: {} }
   const updateTicketWithId = updateTicket.bind(null, ticket.id);
   const [actionState, action] = useActionState(
     updateTicketWithId,
     initialState
   )
+
+  useEffect(() => {
+    if (actionState?.status === "success") {
+      toast.success(actionState.message || "Success!");
+      setTimeout(() => {
+        router.push("/tickets");
+      }, 1000);
+    } else if (actionState?.status === "error") {
+      toast.error(actionState.message || "Something went wrong");
+    }
+  }, [actionState, router])
 
   return (
     <form action={action} className="flex flex-col gap-4">
@@ -61,7 +76,7 @@ const TicketUpdateForm = ({ ticket }: TicketUpdateFormProps) => {
       </div>
 
       <SubmitButton label="Update" pendingLabel="Updating" />
-      <p className="text-sm text-yellow-500">{actionState.message}</p>
+      {/* <p className="text-sm text-yellow-500">{actionState.message}</p> */}
     </form>
   )
 }
