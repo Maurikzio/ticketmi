@@ -36,7 +36,7 @@ const updateTicket = async (
   try {
     await prisma.ticket.update({
       where: { id: ticketId },
-      data: { title, content, }
+      data: { title, content }
     })
   } catch (error) {
     console.error(error)

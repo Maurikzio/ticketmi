@@ -6,11 +6,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Ticket } from "@prisma/client";
 import updateTicket from "../actions/update-ticket";
 import SubmitButton from "@/components/form/submit-button";
-import { useActionState } from "react";
+import { useActionState, useMemo } from "react";
 import { FormState } from "../definitions";
-import { useEffect } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import useActionFeedback from "@/components/form/hooks/use-action-feedback";
 
 interface TicketUpdateFormProps {
   ticket: Ticket
@@ -24,17 +24,23 @@ const TicketUpdateForm = ({ ticket }: TicketUpdateFormProps) => {
     updateTicketWithId,
     initialState
   )
-
-  useEffect(() => {
-    if (actionState?.status === "success") {
+  // We have to memoize options since it was a new object on every render
+  const options = useMemo(() => ({
+    onSuccess() {
       toast.success(actionState.message || "Success!");
       setTimeout(() => {
         router.push("/tickets");
       }, 1000);
-    } else if (actionState?.status === "error") {
+    },
+    onError() {
       toast.error(actionState.message || "Something went wrong");
     }
-  }, [actionState, router])
+  }), [actionState.message, router])
+
+  useActionFeedback(
+    actionState.status as string,
+    options
+  )
 
   return (
     <form action={action} className="flex flex-col gap-4">
