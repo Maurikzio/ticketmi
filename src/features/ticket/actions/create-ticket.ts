@@ -11,7 +11,8 @@ const createTicketSchema = z.object({
   content: z.string().min(1).max(1024)
 })
 
-const createTicket = async (actionState: FormState, formData: FormData) => {
+// const createTicket = async (actionState: FormState, formData: FormData) => {
+const createTicket = async (actionState: FormState, formData: FormData): Promise<FormState> => {
   const validateFields = createTicketSchema.safeParse({
     title: formData.get("title"),
     content: formData.get("content")
@@ -30,10 +31,11 @@ const createTicket = async (actionState: FormState, formData: FormData) => {
       data: { title, content }
     })
     revalidatePath(ticketsPath)
-    return { message: "Ticket created" }
+    return { message: "Ticket created", status: "success", }
   } catch (error) {
     console.error(error)
     return {
+      status: "error",
       message: "Something went wrong"
     }
   }
