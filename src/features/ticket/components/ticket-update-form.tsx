@@ -11,6 +11,7 @@ import { FormState } from "../definitions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import useActionFeedback from "@/components/form/hooks/use-action-feedback";
+import { ticketPath } from "@/paths";
 
 interface TicketUpdateFormProps {
   ticket: Ticket
@@ -28,14 +29,14 @@ const TicketUpdateForm = ({ ticket }: TicketUpdateFormProps) => {
   const options = useMemo(() => ({
     onSuccess() {
       toast.success(actionState.message || "Success!");
-      setTimeout(() => {
-        router.push("/tickets");
-      }, 1000);
+      // setTimeout(() => {
+      router.push(ticketPath(ticket.id));
+      // }, 1000);
     },
     onError() {
       toast.error(actionState.message || "Something went wrong");
     }
-  }), [actionState.message, router])
+  }), [actionState.message, router, ticket.id])
 
   useActionFeedback(
     actionState.status as string,
