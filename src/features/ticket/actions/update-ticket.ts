@@ -6,10 +6,13 @@ import { revalidatePath } from "next/cache"
 // import { redirect } from "next/navigation"
 import { z } from "zod";
 import { FormState } from "../definitions"
+import { toCent } from "@/utils/currency";
 
 const updateTicketSchema = z.object({
   title: z.string().min(1).max(191),
-  content: z.string().min(1).max(1024)
+  content: z.string().min(1).max(1024),
+  deadline: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Date is required"),
+  bounty: z.coerce.number().gt(0, { message: "Must be greater than $0" })
 })
 
 const updateTicket = async (
@@ -19,7 +22,9 @@ const updateTicket = async (
 ): Promise<FormState> => {
   const validateFields = updateTicketSchema.safeParse({
     title: formData.get("title"),
-    content: formData.get("content")
+    content: formData.get("content"),
+    deadline: formData.get("deadline"),
+    bounty: formData.get('bounty')
   })
 
   if (!validateFields.success) {
@@ -31,12 +36,12 @@ const updateTicket = async (
       }
     }
   }
-
-  const { title, content } = validateFields.data;
+  const { title, content, deadline, bounty } = validateFields.data;
+  const bountyInCents = toCent(bounty);
   try {
     await prisma.ticket.update({
       where: { id: ticketId },
-      data: { title, content }
+      data: { title, content, deadline, bounty: bountyInCents }
     })
   } catch (error) {
     console.error(error)

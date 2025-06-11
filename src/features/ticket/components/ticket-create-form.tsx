@@ -57,6 +57,33 @@ const TicketCreateForm = () => {
         ) : null}
       </div>
 
+      <div className="flex justify-between">
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="deadline">Dealine</Label>
+          <Input type="date" id="deadline" name="deadline" />
+          {actionState.errors?.deadline ? (
+            actionState.errors.deadline.map(error => (
+              <p
+                key={error}
+                className='mt-2 text-sm text-red-500'
+              >{error}</p>
+            ))
+          ) : null}
+        </div>
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="bounty">Bounty ($)</Label>
+          <Input type="number" id="bounty" name="bounty" />
+          {actionState.errors?.bounty ? (
+            actionState.errors.bounty.map(error => (
+              <p
+                key={error}
+                className='mt-2 text-sm text-red-500'
+              >{error}</p>
+            ))
+          ) : null}
+        </div>
+      </div>
+
       <SubmitButton label="Create" pendingLabel="Creating" />
       {/* <p className="text-sm text-yellow-500">{actionState.message}</p> */}
     </form>

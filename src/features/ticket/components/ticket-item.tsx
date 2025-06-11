@@ -4,6 +4,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -12,6 +13,7 @@ import { Pen, Check, File, TrashIcon, ExternalLink, Pencil } from "lucide-react"
 import { Button } from "@/components/ui/button";
 import { Ticket } from "@prisma/client";
 import { deleteTicket } from "../actions/delete-ticket";
+import { formatCurrency } from "@/utils/currency";
 
 const TICKET_ICONS = {
   "OPEN": <File className="h-4 w-4" />,
@@ -40,6 +42,10 @@ const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
             {ticket.content}
           </span>
         </CardContent>
+        <CardFooter className="flex justify-between">
+          <p className="text-sm text-muted-foreground">{ticket.deadline}</p>
+          <p className="text-sm text-muted-foreground">{formatCurrency(ticket.bounty)}</p>
+        </CardFooter>
       </Card>
       <div className="flex flex-col gap-y-1">
         {!isDetail ? (

@@ -4,9 +4,13 @@ export interface FormState {
   errors?: {
     title?: string[];
     content?: string[];
+    deadline?: string[];
+    bounty?: string[]
   };
   values?: {
     title?: string;
     content?: string;
+    deadline?: string;
+    bounty?: number
   }
 }
