@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import useActionFeedback from "@/components/form/hooks/use-action-feedback";
 import { ticketPath } from "@/paths";
 import { fromCent } from "@/utils/currency";
+import DatePicker from "@/components/date-picker";
 
 interface TicketUpdateFormProps {
   ticket: Ticket
@@ -83,13 +84,19 @@ const TicketUpdateForm = ({ ticket }: TicketUpdateFormProps) => {
         ) : null}
       </div>
 
-      <div className="flex justify-between">
+      <div className="flex justify-between gap-2">
         <div className="flex flex-col gap-2">
-          <Label htmlFor="deadline">Dealine</Label>
-          <Input
+          {/* <Label htmlFor="deadline">Dealine</Label> */}
+          {/* <Input
             type="date"
             id="deadline"
             name="deadline"
+            defaultValue={actionState?.values?.deadline ?? ticket.deadline}
+          /> */}
+          <DatePicker
+            id="deadline"
+            name="deadline"
+            label="Deadline"
             defaultValue={actionState?.values?.deadline ?? ticket.deadline}
           />
           {actionState.errors?.deadline ? (

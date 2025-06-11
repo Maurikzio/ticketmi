@@ -9,6 +9,7 @@ import { useActionState, useMemo } from "react";
 import { FormState } from "../definitions";
 import { toast } from "sonner";
 import useActionFeedback from "@/components/form/hooks/use-action-feedback";
+import DatePicker from "@/components/date-picker";
 
 const TicketCreateForm = () => {
   const initialState: FormState = { message: "", errors: {}, status: "idle", }
@@ -57,10 +58,15 @@ const TicketCreateForm = () => {
         ) : null}
       </div>
 
-      <div className="flex justify-between">
+      <div className="flex justify-between gap-2">
         <div className="flex flex-col gap-2">
-          <Label htmlFor="deadline">Dealine</Label>
-          <Input type="date" id="deadline" name="deadline" />
+          {/* <Label htmlFor="deadline">Dealine</Label>
+          <Input type="date" id="deadline" name="deadline" /> */}
+          <DatePicker
+            id="deadline"
+            name="deadline"
+            label="Deadline"
+          />
           {actionState.errors?.deadline ? (
             actionState.errors.deadline.map(error => (
               <p
