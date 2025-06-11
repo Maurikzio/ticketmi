@@ -36,7 +36,8 @@ export default function DatePicker({ id, label, name, defaultValue }: DatePicker
             id="date"
             className="w-48 justify-between font-normal"
           >
-            {date ? date.toLocaleDateString() : "Select date"}
+            {/* {date ? date.toLocaleDateString() : "Select date"} */}
+            {date ? date.toISOString().split('T')[0] : "Select Date"}
             <Calendar1 />
             <input type="hidden" id={id} name={name} value={formattedStringDate} />
           </Button>

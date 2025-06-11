@@ -63,6 +63,7 @@ const TicketCreateForm = () => {
           {/* <Label htmlFor="deadline">Dealine</Label>
           <Input type="date" id="deadline" name="deadline" /> */}
           <DatePicker
+            key={actionState.timestamp}
             id="deadline"
             name="deadline"
             label="Deadline"

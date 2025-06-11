@@ -38,7 +38,7 @@ const createTicket = async (actionState: FormState, formData: FormData): Promise
       data: { title, content, deadline, bounty: bountyInCents }
     })
     revalidatePath(ticketsPath)
-    return { message: "Ticket created", status: "success", }
+    return { message: "Ticket created", status: "success", timestamp: new Date().getTime() }
   } catch (error) {
     console.error(error)
     return {

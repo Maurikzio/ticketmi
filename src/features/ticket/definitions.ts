@@ -13,4 +13,5 @@ export interface FormState {
     deadline?: string;
     bounty?: number
   }
+  timestamp?: number
 }
