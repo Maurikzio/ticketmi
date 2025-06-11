@@ -34,7 +34,7 @@ const TicketCreateForm = () => {
     <form action={action} className="flex flex-col gap-4">
       <div className="flex flex-col gap-2">
         <Label htmlFor="title">Title</Label>
-        <Input type="text" id="title" name="title" placeholder="Title" />
+        <Input type="text" id="title" name="title" placeholder="Title" defaultValue={actionState.values?.title} />
         {actionState.errors?.title ? (
           actionState.errors.title.map(error => (
             <p
@@ -47,7 +47,7 @@ const TicketCreateForm = () => {
 
       <div className="flex flex-col gap-2">
         <Label htmlFor="content">Content</Label>
-        <Textarea placeholder="Type the ticket content here." id="content" name="content" />
+        <Textarea placeholder="Type the ticket content here." id="content" name="content" defaultValue={actionState.values?.content} />
         {actionState.errors?.content ? (
           actionState.errors.content.map(error => (
             <p
@@ -67,6 +67,7 @@ const TicketCreateForm = () => {
             id="deadline"
             name="deadline"
             label="Deadline"
+            defaultValue={actionState.values?.deadline}
           />
           {actionState.errors?.deadline ? (
             actionState.errors.deadline.map(error => (
@@ -79,7 +80,7 @@ const TicketCreateForm = () => {
         </div>
         <div className="flex flex-col gap-2">
           <Label htmlFor="bounty">Bounty ($)</Label>
-          <Input type="number" id="bounty" name="bounty" />
+          <Input type="number" id="bounty" name="bounty" defaultValue={actionState.values?.bounty} />
           {actionState.errors?.bounty ? (
             actionState.errors.bounty.map(error => (
               <p

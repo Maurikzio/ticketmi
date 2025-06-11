@@ -27,7 +27,13 @@ const createTicket = async (actionState: FormState, formData: FormData): Promise
   if (!validateFields.success) {
     return {
       message: "Missing fields. Failed to create ticket",
-      errors: validateFields.error.flatten().fieldErrors
+      errors: validateFields.error.flatten().fieldErrors,
+      values: {
+        title: formData.get("title") as string,
+        content: formData.get("content") as string,
+        deadline: formData.get("deadline") as string,
+        bounty: formData.get("bounty") ? Number(formData.get("bounty")) : undefined
+      }
     }
   }
 
