@@ -23,8 +23,9 @@ interface TicketMoreMenuProps {
 const TicketMoreMenu = ({ ticket, trigger }: TicketMoreMenuProps) => {
   const ticketStatus = Object.keys(TICKET_STATUS_LABELS) as Array<keyof typeof TICKET_STATUS_LABELS>;
   const handleUpdateTicketStatus = async (value: string) => {
-    const result = await updateTicketStatus(ticket.id, value as TicketStatus);
-    console.log(result);
+    const promise = updateTicketStatus(ticket.id, value as TicketStatus);
+    toast.promise(promise, { loading: 'Updating status...' })
+    const result = await promise;
     if (result) {
       toast.success("Status updated")
     } else {
