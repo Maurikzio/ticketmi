@@ -9,11 +9,12 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import clsx from "clsx";
-import { Pen, Check, File, TrashIcon, ExternalLink, Pencil } from "lucide-react";
+import { Pen, Check, File, TrashIcon, ExternalLink, Pencil, MoreVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Ticket } from "@prisma/client";
 import { deleteTicket } from "../actions/delete-ticket";
 import { formatCurrency } from "@/utils/currency";
+import TicketMoreMenu from "./ticket-more-menu";
 
 const TICKET_ICONS = {
   "OPEN": <File className="h-4 w-4" />,
@@ -66,6 +67,14 @@ const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
             <Pencil />
           </Link>
         </Button>
+        <TicketMoreMenu
+          ticket={ticket}
+          trigger={
+            <Button variant="outline" size="icon">
+              <MoreVertical />
+            </Button>
+          }
+        />
       </div>
     </div>
   )
