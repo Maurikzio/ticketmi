@@ -9,10 +9,9 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import clsx from "clsx";
-import { Pen, Check, File, TrashIcon, ExternalLink, Pencil, MoreVertical } from "lucide-react";
+import { Pen, Check, File, ExternalLink, Pencil, MoreVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Ticket } from "@prisma/client";
-import { deleteTicket } from "../actions/delete-ticket";
 import { formatCurrency } from "@/utils/currency";
 import TicketMoreMenu from "./ticket-more-menu";
 
@@ -55,13 +54,17 @@ const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
               <ExternalLink />
             </Link>
           </Button>
-        ) : (
-          <form action={deleteTicket.bind(null, ticket.id)}>
-            <Button variant="outline" size="icon">
-              <TrashIcon className="h-4 w-4" />
-            </Button>
-          </form>
-        )}
+        ) : null}
+        {/* (
+          <ConfirmDialog
+            action={deleteTicket.bind(null, ticket.id)}
+            trigger={
+              <Button variant="outline" size="icon">
+                <TrashIcon className="h-4 w-4" />
+              </Button>
+            }
+          />
+        )} */}
         <Button variant="outline" size="icon" asChild>
           <Link prefetch href={ticketEditPath(ticket.id)}>
             <Pencil />
