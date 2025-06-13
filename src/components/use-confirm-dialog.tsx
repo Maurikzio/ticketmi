@@ -8,8 +8,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { Button } from "./ui/button";
 import { cloneElement, useState } from "react";
+import SubmitButton from "./form/submit-button";
+import Form from "./form/form";
 
 interface UseConfirmDialogProps {
   action: () => Promise<void>;
@@ -40,11 +41,9 @@ const useConfirmDialog = ({
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction asChild>
-            <form action={action}>
-              <Button type="submit">
-                Confirm
-              </Button>
-            </form>
+            <Form action={action}>
+              <SubmitButton label="Confirm" pendingLabel="Deleting" />
+            </Form>
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
