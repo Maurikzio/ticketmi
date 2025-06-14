@@ -1,4 +1,4 @@
-import { homePath, ticketsPath } from "@/paths";
+import { homePath, signInPath, signUpPath, ticketsPath } from "@/paths";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button"
 import { SquareChartGantt } from "lucide-react";
@@ -26,6 +26,8 @@ const Header = () => {
       <div className="flex items-center gap-4">
         <ThemeSwitcher />
         <Link href={ticketsPath} className={buttonVariants({ variant: "default" })}>Tickets</Link>
+        <Link href={signUpPath} className={buttonVariants({ variant: "outline" })}>SignUp</Link>
+        <Link href={signInPath} className={buttonVariants({ variant: "outline" })}>SignIn</Link>
       </div>
     </nav>
   )
