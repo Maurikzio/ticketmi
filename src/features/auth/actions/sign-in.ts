@@ -47,6 +47,8 @@ const signIn = async (_actionState: AuthState, formData: FormData): Promise<Auth
   }
 
   revalidatePath(ticketsPath, 'layout')
+  //Si deseamos un revalidacion completa despues del login podemos hacer:
+  // revalidatePath('/', 'layout')
   redirect(ticketsPath)
 }
 

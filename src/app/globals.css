@@ -135,4 +135,11 @@
   .animate-fade-in-from-top {
     animation: fade-in-from-top 0.3s ease-out;
   }
+  @keyframes header-from-top {
+    0% { transform: translateY(-100%) }
+    100% { transform: translateY(0) }
+  }
+  .animate-header-from-top {
+    animation: header-from-top 0.3s ease-out;
+  }
 }
