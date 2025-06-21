@@ -17,6 +17,9 @@ model Ticket {
   status    TicketStatus @default(OPEN)
   deadline  String
   bounty    Int
+  userId    String?      @db.Uuid //ID del usuario de Supabase (opcional por ahora)
+
+  @@index([userId])
 }
 
 enum TicketStatus {

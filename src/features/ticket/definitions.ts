@@ -15,3 +15,18 @@ export interface FormState {
   }
   timestamp?: number
 }
+
+export interface AuthState {
+  success?: string;
+  message?: string;
+  error?: string;
+  errors?: {
+    email?: string[];
+    password?: string[];
+    confirmPassword?: string[]
+  },
+  values?: {
+    email?: string;
+    password?: string
+  }
+}
