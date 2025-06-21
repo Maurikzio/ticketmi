@@ -8,6 +8,7 @@ const tickets = [
     status: "DONE" as const,
     deadline: "2024-12-31",
     bounty: 500,
+    userId: "afc71530-09d4-431e-b632-a2f0d4e391a8",
   },
   {
     // id: "2",
@@ -16,7 +17,7 @@ const tickets = [
     status: "OPEN" as const,
     deadline: "2024-10-31",
     bounty: 100,
-
+    userId: "efeb4e82-5935-4bbf-a6a5-034bf3a696a7",
   },
   {
     // id: "3",
@@ -25,6 +26,7 @@ const tickets = [
     status: "IN_PROGRESS" as const,
     deadline: "2024-11-31",
     bounty: 200,
+    userId: "86da4107-e129-411c-8961-09a50d340e15",
   }
 ];
 
