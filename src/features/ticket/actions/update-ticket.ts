@@ -1,12 +1,16 @@
 'use server'
 
 import { prisma } from "@/lib/prisma"
-import { ticketsPath } from "@/paths"
+import { signInPath, ticketsPath } from "@/paths"
 import { revalidatePath } from "next/cache"
 // import { redirect } from "next/navigation"
 import { z } from "zod";
 import { FormState } from "../definitions"
 import { toCent } from "@/utils/currency";
+import { redirect } from "next/navigation"
+import { requireProfile } from "@/features/auth/utils/requireProfile";
+import { isOwner } from "@/features/auth/utils/is-owner";
+import { Ticket } from "@prisma/client";
 
 const updateTicketSchema = z.object({
   title: z.string().min(1).max(191),
@@ -20,6 +24,23 @@ const updateTicket = async (
   actionState: FormState,
   formData: FormData
 ): Promise<FormState> => {
+  const profileData = await requireProfile()
+
+  if (!profileData) {
+    redirect(signInPath)
+  }
+
+  const ticket = await prisma.ticket.findUnique({
+    where: { id: ticketId },
+  })
+
+  if (!ticket || !isOwner(profileData.profile, ticket as Ticket)) {
+    return {
+      message: "Unauthorized",
+      status: "error",
+    }
+  }
+
   const validateFields = updateTicketSchema.safeParse({
     title: formData.get("title"),
     content: formData.get("content"),

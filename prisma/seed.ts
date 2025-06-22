@@ -5,6 +5,11 @@ const profiles = [
     userId: "26e5cd3f-d57f-4f7c-9fc9-300c8ffa661f",
     userName: "Pedro",
     userLastname: "Fernandez",
+  },
+  {
+    userId: "dab9d23d-1c8d-4cb3-86e6-73a70ff3b9ec",
+    userName: "Ronaldinho",
+    userLastname: "Gaucho"
   }
 ]
 
