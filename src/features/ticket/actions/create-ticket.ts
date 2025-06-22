@@ -1,11 +1,13 @@
 'use server'
 
 import { prisma } from "@/lib/prisma"
-import { ticketsPath } from "@/paths"
+import { signInPath, ticketsPath } from "@/paths"
 import { revalidatePath } from "next/cache"
 import { z } from "zod";
 import { FormState } from "../definitions";
 import { toCent } from "@/utils/currency";
+import { createClient } from "@/utils/supabase/server";
+import { redirect } from "next/navigation"
 
 const createTicketSchema = z.object({
   title: z.string().min(1).max(191),
@@ -17,6 +19,21 @@ const createTicketSchema = z.object({
 
 // const createTicket = async (actionState: FormState, formData: FormData) => {
 const createTicket = async (actionState: FormState, formData: FormData): Promise<FormState> => {
+  const supabase = await createClient()
+  const { data: { user }, error } = await supabase.auth.getUser()
+
+  if (error || !user) {
+    redirect(signInPath)
+  }
+
+  const profile = await prisma.profile.findUnique({
+    where: { userId: user.id }
+  });
+
+  if (!profile) {
+    redirect(signInPath)
+  }
+
   const validateFields = createTicketSchema.safeParse({
     title: formData.get("title"),
     content: formData.get("content"),
@@ -41,7 +58,13 @@ const createTicket = async (actionState: FormState, formData: FormData): Promise
   const bountyInCents = toCent(bounty); //Convert to store value in cents.
   try {
     await prisma.ticket.create({
-      data: { title, content, deadline, bounty: bountyInCents }
+      data: {
+        title,
+        content,
+        deadline,
+        bounty: bountyInCents,
+        profileId: profile.id
+      }
     })
     revalidatePath(ticketsPath)
     return { message: "Ticket created", status: "success", timestamp: new Date().getTime() }

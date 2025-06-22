@@ -8,6 +8,20 @@ datasource db {
   directUrl = env("DIRECT_URL") // for migrations
 }
 
+model Profile {
+  id           String   @id @default(cuid())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  userId       String   @unique @db.Uuid
+  userName     String
+  userLastname String
+
+  //Relaciones
+  tickets Ticket[] //Remember, this is a virtual field only, there will not be a ticket field in table
+
+  @@index([userId])
+}
+
 model Ticket {
   id        String       @id @default(cuid()) //mandatory to be
   createdAt DateTime     @default(now()) //mandatory to be
@@ -17,9 +31,12 @@ model Ticket {
   status    TicketStatus @default(OPEN)
   deadline  String
   bounty    Int
-  userId    String?      @db.Uuid //ID del usuario de Supabase (opcional por ahora)
+  profileId String
 
-  @@index([userId])
+  //Relaciones
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@index([profileId])
 }
 
 enum TicketStatus {
