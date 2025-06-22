@@ -11,7 +11,7 @@ import {
 import clsx from "clsx";
 import { Pen, Check, File, ExternalLink, Pencil, MoreVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Ticket } from "@prisma/client";
+import { Profile, Ticket } from "@prisma/client";
 import { formatCurrency } from "@/utils/currency";
 import TicketMoreMenu from "./ticket-more-menu";
 
@@ -22,7 +22,7 @@ const TICKET_ICONS = {
 }
 
 interface TicketItemProps {
-  ticket: Ticket;
+  ticket: Ticket & { profile: Profile }
   isDetail?: boolean;
 }
 
@@ -43,7 +43,7 @@ const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
           </span>
         </CardContent>
         <CardFooter className="flex justify-between">
-          <p className="text-sm text-muted-foreground">{ticket.deadline}</p>
+          <p className="text-sm text-muted-foreground">{ticket.deadline} by {ticket.profile.userName} {ticket.profile.userLastname}</p>
           <p className="text-sm text-muted-foreground">{formatCurrency(ticket.bounty)}</p>
         </CardFooter>
       </Card>
