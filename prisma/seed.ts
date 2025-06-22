@@ -1,5 +1,13 @@
 import { prisma } from "@/lib/prisma"
 
+const profiles = [
+  {
+    userId: "26e5cd3f-d57f-4f7c-9fc9-300c8ffa661f",
+    userName: "Pedro",
+    userLastname: "Fernandez",
+  }
+]
+
 const tickets = [
   {
     // id: "1",
@@ -8,7 +16,6 @@ const tickets = [
     status: "DONE" as const,
     deadline: "2024-12-31",
     bounty: 500,
-    userId: "afc71530-09d4-431e-b632-a2f0d4e391a8",
   },
   {
     // id: "2",
@@ -17,7 +24,6 @@ const tickets = [
     status: "OPEN" as const,
     deadline: "2024-10-31",
     bounty: 100,
-    userId: "efeb4e82-5935-4bbf-a6a5-034bf3a696a7",
   },
   {
     // id: "3",
@@ -26,12 +32,12 @@ const tickets = [
     status: "IN_PROGRESS" as const,
     deadline: "2024-11-31",
     bounty: 200,
-    userId: "86da4107-e129-411c-8961-09a50d340e15",
   }
 ];
 
 const seed = async () => {
   const t0 = performance.now()
+  await prisma.profile.deleteMany()
   await prisma.ticket.deleteMany()
 
   //1
@@ -46,7 +52,13 @@ const seed = async () => {
   // await Promise.all(promises)
 
   //3
-  await prisma.ticket.createMany({ data: tickets })
+  const dbProfiles = await prisma.profile.createManyAndReturn({ data: profiles })
+  await prisma.ticket.createMany({
+    data: tickets.map((ticket) => ({
+      ...ticket,
+      profileId: dbProfiles[0].id
+    }))
+  })
   const t1 = performance.now()
   console.log(`DB Seed: Finished in (${t1 - t0}ms)`)
 }
