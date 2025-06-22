@@ -2,6 +2,9 @@ import CardCompact from "@/components/card-compact";
 import { getTicket } from "@/features/ticket/queries/get-ticket";
 import TicketUpdateForm from "@/features/ticket/components/ticket-update-form";
 import { notFound } from "next/navigation";
+import { requireProfile } from "@/features/auth/utils/requireProfile";
+import { isOwner } from "@/features/auth/utils/is-owner";
+import { Ticket } from "@prisma/client";
 
 interface TicketEditPageProps {
   params: Promise<{ ticketId: string }>
@@ -10,8 +13,10 @@ interface TicketEditPageProps {
 export default async function TicketEditPage({ params }: TicketEditPageProps) {
   const { ticketId } = await params;
   const ticket = await getTicket(ticketId);
+  const profileData = await requireProfile()
+  const isTicketOwner = isOwner(profileData?.profile, ticket as Ticket);
 
-  if (!ticket) {
+  if (!ticket || !isTicketOwner) {
     notFound()
   }
 

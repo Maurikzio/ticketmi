@@ -13,7 +13,7 @@ import SubmitButton from "./form/submit-button";
 import Form from "./form/form";
 
 interface UseConfirmDialogProps {
-  action: () => Promise<void>;
+  action: () => Promise<{ message: string, status: string }>,
   trigger: React.ReactElement<{ onClick?: React.MouseEventHandler }>
   title?: string;
   description?: string;

@@ -14,6 +14,8 @@ import { Button } from "@/components/ui/button";
 import { Profile, Ticket } from "@prisma/client";
 import { formatCurrency } from "@/utils/currency";
 import TicketMoreMenu from "./ticket-more-menu";
+import { requireProfile } from "@/features/auth/utils/requireProfile";
+import { isOwner } from "@/features/auth/utils/is-owner";
 
 const TICKET_ICONS = {
   "OPEN": <File className="h-4 w-4" />,
@@ -26,7 +28,10 @@ interface TicketItemProps {
   isDetail?: boolean;
 }
 
-const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
+const TicketItem = async ({ ticket, isDetail }: TicketItemProps) => {
+  const profileData = await requireProfile();
+  const isTicketOwner = isOwner(profileData?.profile, ticket);
+
   return (
     <div className={clsx("w-full flex gap-x-1", { "max-w-[420px]": !isDetail, "max-w-[580px]": isDetail })}>
       <Card className="w-full ">
@@ -65,19 +70,19 @@ const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
             }
           />
         )} */}
-        <Button variant="outline" size="icon" asChild>
+        {isTicketOwner ? <Button variant="outline" size="icon" asChild>
           <Link prefetch href={ticketEditPath(ticket.id)}>
             <Pencil />
           </Link>
-        </Button>
-        <TicketMoreMenu
+        </Button> : null}
+        {isTicketOwner ? <TicketMoreMenu
           ticket={ticket}
           trigger={
             <Button variant="outline" size="icon">
               <MoreVertical />
             </Button>
           }
-        />
+        /> : null}
       </div>
     </div>
   )
