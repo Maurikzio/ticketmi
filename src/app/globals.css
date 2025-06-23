@@ -142,4 +142,11 @@
   .animate-header-from-top {
     animation: header-from-top 0.3s ease-out;
   }
+  @keyframes sidebar-from-left {
+    0% { transform: translateX(-100%) }
+    100% { transform: translateX(0) }
+  }
+  .animate-sidebar-from-left {
+    animation: sidebar-from-left 0.5s ease-out;
+  }
 }
