@@ -1,5 +1,6 @@
 export type NavItem = {
   title: string;
   href: string;
-  icon: React.ReactElement
+  icon: React.ReactElement;
+  separator?: boolean;
 }

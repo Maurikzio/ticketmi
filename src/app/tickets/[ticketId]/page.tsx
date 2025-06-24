@@ -1,4 +1,6 @@
 
+import Breadcrumbs from "@/components/breadrumbs";
+import { Separator } from "@/components/ui/separator";
 import TicketItem from "@/features/ticket/components/ticket-item";
 import { getTicket } from "@/features/ticket/queries/get-ticket";
 import { notFound } from "next/navigation";
@@ -15,9 +17,15 @@ export default async function Ticketpage({ params }: TicketPageProps) {
     notFound()
   }
 
+  const breadcrumbs = [{ title: "Tickets", href: "/tickets" }, { title: ticket.title }]
+
   return (
-    <div className="font-[family-name:var(--font-geist-sans)] flex justify-center animate-fade-in-from-top">
-      <TicketItem ticket={ticket} isDetail={true} />
+    <div className="flex-1 flex flex-col gap-y-8">
+      <Breadcrumbs breadcrumbs={breadcrumbs} />
+      <Separator />
+      <div className="font-[family-name:var(--font-geist-sans)] flex justify-center animate-fade-in-from-top">
+        <TicketItem ticket={ticket} isDetail={true} />
+      </div>
     </div>
   );
 }

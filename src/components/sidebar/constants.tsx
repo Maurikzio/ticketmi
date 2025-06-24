@@ -1,6 +1,6 @@
-import { Book, Library } from "lucide-react";
+import { Book, CircleUser, Library } from "lucide-react";
 import { NavItem } from "./types";
-import { homePath, ticketsPath } from "@/paths";
+import { accountProfilePath, homePath, ticketsPath } from "@/paths";
 
 export const navItems: NavItem[] = [
   {
@@ -12,6 +12,12 @@ export const navItems: NavItem[] = [
     title: "My tickets",
     icon: <Book className="h-5" />,
     href: ticketsPath
+  },
+  {
+    title: "Account",
+    icon: <CircleUser className="h-5" />,
+    href: accountProfilePath,
+    separator: true,
   }
 ]
 
