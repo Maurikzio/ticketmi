@@ -52,4 +52,37 @@ const signIn = async (_actionState: AuthState, formData: FormData): Promise<Auth
   redirect(ticketsPath)
 }
 
+export const signInV2 = async (formData: FormData) => {
+  const supabase = await createClient()
+  const validatedFields = signInSchema.safeParse({
+    email: formData.get('email'),
+    password: formData.get('password'),
+  })
+
+  if (!validatedFields.success) {
+    return {
+      error: "Missing fields. Failed to log in",
+      errors: validatedFields.error.flatten().fieldErrors,
+      values: {
+        email: formData.get('email') as string,
+      }
+    }
+  }
+
+  const { email, password } = validatedFields.data;
+
+  try {
+    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    if (error) throw error
+  } catch (error: unknown) {
+    console.error(error)
+    return {
+      error: error instanceof Error ? error.message : "An error ocurred",
+      values: {
+        email: formData.get('email') as string,
+      }
+    }
+  }
+}
+
 export default signIn;

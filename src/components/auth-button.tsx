@@ -1,54 +1,28 @@
 "use client"
-import { useEffect, useState } from "react";
-import LogoutButton from "./logout-button";
+
+import { useState } from "react";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button"
 import { signInPath, signUpPath } from "@/paths";
 import { Separator } from "./ui/separator";
+import LogoutButton from "./logout-button-with-use-transition";
 import { createClient } from "@/utils/supabase/client";
 import { User } from "@supabase/supabase-js";
 
 const AuthButton = () => {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true)
+  const { auth } = createClient()
 
-  useEffect(() => {
-    const supabase = createClient()
-
-    const fetchUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user)
-      setLoading(false)
-    }
-
-    fetchUser()
-
-    // Suscribirse a cambios de sesión
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null)
-    })
-
-    // Limpiar la suscripción al desmontar
-    return () => {
-      subscription?.unsubscribe()
-    }
-  }, [])
-
-  if (loading) {
-    return (
-      <div className="flex gap-2 items-center">
-        <div className="h-8 w-20 bg-gray-200 rounded animate-pulse"></div>
-        <div className="h-8 w-20 bg-gray-200 rounded animate-pulse"></div>
-      </div>
-    )
-  }
+  auth.onAuthStateChange(async (event, session) => {
+    setUser(session?.user || null)
+  })
 
   if (user) {
     return (
       <>
         <Separator orientation="vertical" />
         <div className="flex gap-2 items-center">
-          <p className="text-sm">Hey, {user.email}!</p>
+          {/* <p className="text-sm">Hey, {user.email}!</p> */}
           <LogoutButton />
         </div>
       </>

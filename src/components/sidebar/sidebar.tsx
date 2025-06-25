@@ -4,16 +4,22 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { navItems } from "./constants";
 import SidebarItem from "./sidebar-item";
-import useAuth from "@/features/auth/hooks/use-auth";
 import { usePathname } from "next/navigation";
 import { getActivePath } from "@/utils/get-active-path";
 import { signInPath, signUpPath } from "@/paths";
+import { createClient } from "@/utils/supabase/client";
+import { User } from "@supabase/supabase-js";
 
 const Sidebar = () => {
   const [isTransition, setIsTransition] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const { user, loading } = useAuth();
   const pathname = usePathname();
+  const [user, setUser] = useState<User | null>(null);
+  const { auth } = createClient()
+
+  auth.onAuthStateChange(async (event, session) => {
+    setUser(session?.user || null)
+  })
 
   const { activeIndex } = getActivePath(pathname, navItems.map(item => item.href), [signInPath, signUpPath])
 
@@ -23,7 +29,7 @@ const Sidebar = () => {
     setTimeout(() => setIsTransition(false), 200)
   }
 
-  if (!user || loading) {
+  if (!user) {
     return <div className="w-[78px] bg-secondary/20" />
   }
 

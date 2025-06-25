@@ -10,4 +10,17 @@ const signOut = async () => {
   redirect(signInPath)
 }
 
+export const signOutV2 = async () => {
+  try {
+    const supabase = await createClient();
+    const { error } = await supabase.auth.signOut()
+    if (error) throw error;
+
+  } catch (error: unknown) {
+    return {
+      error: error instanceof Error ? error.message : "An error ocurred",
+    }
+  }
+}
+
 export default signOut;
