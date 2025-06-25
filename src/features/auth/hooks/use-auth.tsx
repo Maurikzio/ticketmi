@@ -22,6 +22,16 @@ const useAuth = () => {
       setUser(session?.user ?? null)
     })
 
+    // const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    //   if(session?.user) {
+    //     const userData = await fetchUserData();
+    //     setData(userData)
+    //   } else  {
+    //     setData(null);
+    //   }
+    //   setLoading(false)
+    // })
+
     // Limpiar la suscripción al desmontar
     return () => {
       subscription?.unsubscribe()
