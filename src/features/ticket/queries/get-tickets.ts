@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 
 // export const getTickets = async (): Promise<Ticket[]> => {
-export const getTickets = async (profileId?: string, search?: string) => {
+export const getTickets = async (profileId?: string, search?: string, sort?: string) => {
   return await prisma.ticket.findMany({
     where: {
       profileId,
@@ -10,7 +10,7 @@ export const getTickets = async (profileId?: string, search?: string) => {
         mode: "insensitive"
       }
     },
-    orderBy: [{ createdAt: 'desc' }],
+    orderBy: sort === 'bounty' ? { bounty: 'desc' } : { createdAt: 'desc' },
     include: { profile: true }
   })
 }

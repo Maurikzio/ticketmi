@@ -5,17 +5,18 @@ import TicketList from "@/features/ticket/components/ticket-list";
 
 interface HomepageProps {
   searchParams: Promise<{
-    search: string
+    search: string;
+    sort: string;
   }>
 }
 
 export default async function Homepage({ searchParams }: HomepageProps) {
-  const { search } = await searchParams;
+  const { search, sort } = await searchParams;
   return (
     <div className="font-[family-name:var(--font-geist-sans)] flex-1 flex flex-col gap-y-8">
       <Heading title="Home" description="Your home place to start" />
       <Suspense fallback={<Spinner />}>
-        <TicketList search={search} />
+        <TicketList search={search} sort={sort} />
       </Suspense>
     </div>
   );

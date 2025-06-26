@@ -7,12 +7,12 @@ import TicketList from "@/features/ticket/components/ticket-list";
 import { Suspense } from "react";
 
 interface TicketspageProps {
-  searchParams: Promise<{ search: string }>
+  searchParams: Promise<{ search: string, sort: string }>
 }
 
 export default async function Ticketspage({ searchParams }: TicketspageProps) {
   const profileData = await requireProfile();
-  const { search } = await searchParams;
+  const { search, sort } = await searchParams;
 
   return (
     <div className="font-[family-name:var(--font-geist-sans)] flex-1 flex flex-col gap-y-8">
@@ -26,7 +26,7 @@ export default async function Ticketspage({ searchParams }: TicketspageProps) {
       />
 
       <Suspense fallback={<Spinner />}>
-        <TicketList profileId={profileData?.profile.id} search={search} />
+        <TicketList profileId={profileData?.profile.id} search={search} sort={sort} />
       </Suspense>
     </div>
   );
