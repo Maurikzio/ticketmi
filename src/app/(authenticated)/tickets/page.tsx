@@ -6,8 +6,13 @@ import TicketCreateForm from "@/features/ticket/components/ticket-create-form";
 import TicketList from "@/features/ticket/components/ticket-list";
 import { Suspense } from "react";
 
-export default async function Ticketspage() {
+interface TicketspageProps {
+  searchParams: Promise<{ search: string }>
+}
+
+export default async function Ticketspage({ searchParams }: TicketspageProps) {
   const profileData = await requireProfile();
+  const { search } = await searchParams;
 
   return (
     <div className="font-[family-name:var(--font-geist-sans)] flex-1 flex flex-col gap-y-8">
@@ -21,7 +26,7 @@ export default async function Ticketspage() {
       />
 
       <Suspense fallback={<Spinner />}>
-        <TicketList profileId={profileData?.profile.id} />
+        <TicketList profileId={profileData?.profile.id} search={search} />
       </Suspense>
     </div>
   );
