@@ -1,27 +1,21 @@
 "use client"
 
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "./ui/select";
-import { useQueryState } from "nuqs"
-import { sortParser } from "@/features/ticket/definitions";
 
-type SortOption = {
+export type SortOption = {
   label: string;
   value: string;
 }
 
 interface SearchInputProps {
   options: SortOption[]
+  onChange: (value: string) => void;
+  value: string;
 }
 
-const SortSelector = ({ options }: SearchInputProps) => {
-  const [sort, setSort] = useQueryState("sort", sortParser);
-
-  const handleSort = (value: string) => {
-    setSort(value)
-  };
-
+const SortSelector = ({ options, onChange, value }: SearchInputProps) => {
   return (
-    <Select defaultValue={sort} onValueChange={handleSort}>
+    <Select defaultValue={value} onValueChange={onChange}>
       <SelectTrigger>
         <SelectValue />
       </SelectTrigger>
