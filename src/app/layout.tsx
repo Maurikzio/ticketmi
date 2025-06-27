@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/theme/theme-provider"
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import Sidebar from "@/components/sidebar/sidebar";
+import { NuqsAdapter } from 'nuqs/adapters/next/app'
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -49,7 +50,7 @@ export default function RootLayout({
                 flex flex-col
               "
             >
-              {children}
+              <NuqsAdapter>{children}</NuqsAdapter>
             </main>
           </div>
           <Toaster />

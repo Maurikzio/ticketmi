@@ -1,7 +1,8 @@
 "use client"
 
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "./ui/select";
+import { useQueryState } from "nuqs"
+import { sortParser } from "@/features/ticket/definitions";
 
 type SortOption = {
   label: string;
@@ -9,31 +10,18 @@ type SortOption = {
 }
 
 interface SearchInputProps {
-  defaultValue?: string
   options: SortOption[]
-  sort?: string
 }
 
-const SortSelector = ({ defaultValue, options, sort }: SearchInputProps) => {
-  const searchParams = useSearchParams()
-  const pathname = usePathname()
-  const { replace } = useRouter()
+const SortSelector = ({ options }: SearchInputProps) => {
+  const [sort, setSort] = useQueryState("sort", sortParser);
 
   const handleSort = (value: string) => {
-    const params = new URLSearchParams(searchParams)
-
-    if (value === defaultValue) {
-      params.delete("sort")
-    } else if (value) {
-      params.set("sort", value)
-    } else {
-      params.delete("sort")
-    }
-    replace(`${pathname}?${params.toString()}`, { scroll: false })
+    setSort(value)
   };
 
   return (
-    <Select defaultValue={sort || defaultValue} onValueChange={handleSort}>
+    <Select defaultValue={sort} onValueChange={handleSort}>
       <SelectTrigger>
         <SelectValue />
       </SelectTrigger>

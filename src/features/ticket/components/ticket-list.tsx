@@ -21,11 +21,7 @@ const TicketList = async ({ profileId, search, sort }: TicketListProps) => {
     <div className="flex-1 flex flex-col items-center gap-y-4 animate-fade-in-from-top">
       <div className="w-full max-w-[420px] flex gap-2">
         <SearchInput placeholder="Search ticket" />
-        <SortSelector
-          defaultValue="newest"
-          options={sortOptions}
-          sort={sort}
-        />
+        <SortSelector options={sortOptions} />
       </div>
       {tickets?.length ? tickets.map(ticket => (
         <TicketItem key={ticket.id} ticket={ticket} />

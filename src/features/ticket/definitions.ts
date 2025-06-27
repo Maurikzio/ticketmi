@@ -34,9 +34,19 @@ export interface AuthState {
 
 // export type SearchParams = Record<string, string | undefined>;
 
+export const searchParser = parseAsString.withDefault('').withOptions({
+  shallow: false,
+  clearOnDefault: true
+})
+
+export const sortParser = parseAsString.withDefault('newest').withOptions({
+  shallow: false,
+  clearOnDefault: true
+})
+
 export const searchParamsCache = createSearchParamsCache({
-  search: parseAsString.withDefault(''),
-  sort: parseAsString.withDefault('')
+  search: searchParser,
+  sort: sortParser
 })
 
 export type ParsedSearchParams = ReturnType<typeof searchParamsCache.parse>
