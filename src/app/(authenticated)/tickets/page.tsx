@@ -4,10 +4,11 @@ import Spinner from "@/components/spinner";
 import { requireProfile } from "@/features/auth/utils/requireProfile";
 import TicketCreateForm from "@/features/ticket/components/ticket-create-form";
 import TicketList from "@/features/ticket/components/ticket-list";
+import { ParsedSearchParams } from "@/features/ticket/definitions";
 import { Suspense } from "react";
 
 interface TicketspageProps {
-  searchParams: Promise<{ search: string, sort: string }>
+  searchParams: Promise<ParsedSearchParams>
 }
 
 export default async function Ticketspage({ searchParams }: TicketspageProps) {

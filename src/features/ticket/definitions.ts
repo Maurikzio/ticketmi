@@ -1,3 +1,4 @@
+import { createSearchParamsCache, parseAsString } from "nuqs/server"
 export interface FormState {
   message?: string;
   status?: "success" | "error" | "idle";
@@ -30,3 +31,12 @@ export interface AuthState {
     password?: string
   }
 }
+
+// export type SearchParams = Record<string, string | undefined>;
+
+export const searchParamsCache = createSearchParamsCache({
+  search: parseAsString.withDefault(''),
+  sort: parseAsString.withDefault('')
+})
+
+export type ParsedSearchParams = ReturnType<typeof searchParamsCache.parse>

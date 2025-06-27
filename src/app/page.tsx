@@ -2,12 +2,10 @@ import Heading from "@/components/heading";
 import { Suspense } from "react";
 import Spinner from "@/components/spinner";
 import TicketList from "@/features/ticket/components/ticket-list";
+import { ParsedSearchParams } from "@/features/ticket/definitions";
 
 interface HomepageProps {
-  searchParams: Promise<{
-    search: string;
-    sort: string;
-  }>
+  searchParams: Promise<ParsedSearchParams>
 }
 
 export default async function Homepage({ searchParams }: HomepageProps) {
