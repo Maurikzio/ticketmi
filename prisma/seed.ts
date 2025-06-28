@@ -40,10 +40,17 @@ const tickets = [
   }
 ];
 
+const comments = [
+  { content: "First comment" },
+  { content: "Second comment" },
+  { content: "Third comment" },
+]
+
 const seed = async () => {
   const t0 = performance.now()
   await prisma.profile.deleteMany()
   await prisma.ticket.deleteMany()
+  await prisma.comment.deleteMany()
 
   //1
   // for (const ticket of tickets) {
@@ -58,10 +65,17 @@ const seed = async () => {
 
   //3
   const dbProfiles = await prisma.profile.createManyAndReturn({ data: profiles })
-  await prisma.ticket.createMany({
+  const dbTickets = await prisma.ticket.createManyAndReturn({
     data: tickets.map((ticket) => ({
       ...ticket,
       profileId: dbProfiles[0].id
+    }))
+  })
+  await prisma.comment.createMany({
+    data: comments.map((comment) => ({
+      ...comment,
+      authorId: dbProfiles[1].id,
+      ticketId: dbTickets[0].id
     }))
   })
   const t1 = performance.now()

@@ -17,7 +17,8 @@ model Profile {
   userLastname String
 
   //Relaciones
-  tickets Ticket[] //Remember, this is a virtual field only, there will not be a ticket field in table
+  tickets  Ticket[] //Remember, this is a virtual field only, there will not be a ticket field in table
+  comments Comment[]
 
   @@index([userId])
 }
@@ -34,7 +35,8 @@ model Ticket {
   profileId String
 
   //Relaciones
-  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  profile  Profile   @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  comments Comment[]
 
   @@index([profileId])
 }
@@ -43,4 +45,20 @@ enum TicketStatus {
   OPEN
   IN_PROGRESS
   DONE
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  content   String   @db.VarChar(1024)
+
+  // Relaciones
+  authorId String? // Reference to Profile who writes comment
+  author   Profile? @relation(fields: [authorId], references: [id], onDelete: SetNull)
+
+  ticketId String
+  ticket   Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  @@index([ticketId])
+  @@index([authorId])
 }
