@@ -1,4 +1,5 @@
 import { Button } from "./ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 
 type PageAndSize = { page: number, size: number };
 interface PaginationProps {
@@ -22,6 +23,10 @@ const Pagination = ({ pagination, onPagination, paginatedMetadata }: PaginationP
     onPagination({ ...pagination, page: pagination.page - 1 })
   }
 
+  const handleChangeSize = (value: string) => {
+    onPagination({ ...pagination, size: parseInt(value), page: 0 })
+  }
+
   const prevButton = (
     <Button
       variant="outline"
@@ -39,10 +44,24 @@ const Pagination = ({ pagination, onPagination, paginatedMetadata }: PaginationP
     >Next</Button>
   )
 
+  const sizeSelect = (
+    <Select defaultValue={pagination.size.toString()} onValueChange={handleChangeSize}>
+      <SelectTrigger className="h-[36px]" size="sm">
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="5">5</SelectItem>
+        <SelectItem value="10">10</SelectItem>
+        <SelectItem value="15">15</SelectItem>
+      </SelectContent>
+    </Select>
+  )
+
   return (
     <div className="flex justify-between">
       <p className="text-sm text-muted-foreground">{label}</p>
       <div className="flex gap-2">
+        {sizeSelect}
         {prevButton}
         {nextButton}
       </div>
