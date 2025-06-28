@@ -1,19 +1,13 @@
-import { ParsedSearchParams } from "@/features/ticket/definitions"
+import { ParsedSearchParams, searchParamsCache } from "@/features/ticket/definitions"
 import { getTickets } from "@/features/ticket/queries/get-tickets"
 
-export async function GET() {
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
 
-  const searchParams: ParsedSearchParams = new Promise((resolve) =>
-    resolve({
-      search: "",
-      size: 5,
-      page: 0,
-      sort: "newest"
-    })
-  )
-  const { list, metadata } = await getTickets(
-    searchParams,
-    undefined
-  )
-  return Response.json({ list, metadata })
+  // Convertir a Promise de forma más directa
+  const searchParamsPromise = Promise.resolve(Object.fromEntries(searchParams));
+  const typedSearchParams: ParsedSearchParams = searchParamsCache.parse(searchParamsPromise);
+
+  const { list, metadata } = await getTickets(typedSearchParams, undefined);
+  return Response.json({ list, metadata });
 }
