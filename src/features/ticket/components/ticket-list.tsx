@@ -3,14 +3,15 @@ import TicketItem from "@/features/ticket/components/ticket-item";
 import { getTickets } from "@/features/ticket/queries/get-tickets";
 import TicketSearchInput from "./ticket-search-input";
 import TicketSortSelect from "./ticket-sort-select";
+import TicketPagination from "./ticket-pagination";
+import { ParsedSearchParams } from "../definitions";
 
 interface TicketListProps {
   profileId?: string;
-  search?: string;
-  sort?: string;
+  searchParams: ParsedSearchParams
 }
-const TicketList = async ({ profileId, search, sort }: TicketListProps) => {
-  const tickets = await getTickets(profileId, search, sort);
+const TicketList = async ({ profileId, searchParams }: TicketListProps) => {
+  const { list: tickets, metadata: ticketMetadata } = await getTickets(searchParams, profileId);
 
   const sortOptions = [
     { label: "Newest", value: "newest" },
@@ -28,6 +29,9 @@ const TicketList = async ({ profileId, search, sort }: TicketListProps) => {
       )) : (
         <Placeholder label="No tickets found" />
       )}
+      <div className="w-full max-w-[420px]">
+        <TicketPagination paginatedTicketMetadata={ticketMetadata} />
+      </div>
     </div>
   )
 };
