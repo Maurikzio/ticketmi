@@ -10,3 +10,12 @@ export type CommentWithMetadata = Prisma.CommentGetPayload<{
     }
   }
 }>
+
+
+export interface CommentFormState {
+  message?: string;
+  status?: "success" | "error" | "idle";
+  errors?: {
+    content?: string[]
+  }
+}
