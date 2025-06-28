@@ -7,28 +7,27 @@ export const getTickets = async (searchParams: ParsedSearchParams, profileId?: s
 
   const skip = page * size;
   const take = size;
-  const tickets = await prisma.ticket.findMany({
-    where: {
-      profileId,
-      title: {
-        contains: search,
-        mode: "insensitive"
-      }
-    },
-    skip,
-    take,
-    orderBy: sort === 'bounty' ? { bounty: 'desc' } : { createdAt: 'desc' },
-    include: { profile: true }
-  })
-  const count = await prisma.ticket.count({
-    where: {
-      profileId,
-      title: {
-        contains: search,
-        mode: "insensitive"
-      }
-    },
-  })
+
+  const where = {
+    profileId,
+    title: {
+      contains: search,
+      mode: "insensitive" as const
+    }
+  };
+
+  const [tickets, count] = await prisma.$transaction([
+    prisma.ticket.findMany({
+      where,
+      skip,
+      take,
+      orderBy: sort === 'bounty' ? { bounty: 'desc' } : { createdAt: 'desc' },
+      include: { profile: true }
+    }),
+    prisma.ticket.count({
+      where
+    })
+  ])
 
   return {
     list: tickets,
