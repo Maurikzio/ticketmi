@@ -1,15 +1,15 @@
 import CardCompact from "@/components/card-compact";
-import { getComments } from "../queries/get-comments";
 import CommentItem from "./comment-item";
 import CommentCreateform from "./comment-create-form";
 import getProfile from "@/features/auth/queries/get-profile";
+import { CommentWithMetadata } from "../definitions";
 
 interface CommentsProps {
   ticketId: string
+  comments: CommentWithMetadata[]
 }
 
-const Comments = async ({ ticketId }: CommentsProps) => {
-  const comments = await getComments(ticketId)
+const Comments = async ({ ticketId, comments = [] }: CommentsProps) => {
   const data = await getProfile();
 
   return (

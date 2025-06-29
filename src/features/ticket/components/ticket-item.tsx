@@ -17,6 +17,9 @@ import TicketMoreMenu from "./ticket-more-menu";
 import { requireProfile } from "@/features/auth/utils/requireProfile";
 import { isOwner } from "@/features/auth/utils/is-owner";
 import Comments from "@/features/comment/components/comments";
+import { Suspense } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { CommentWithMetadata } from "@/features/comment/definitions";
 
 const TICKET_ICONS = {
   "OPEN": <File className="h-4 w-4" />,
@@ -27,9 +30,10 @@ const TICKET_ICONS = {
 interface TicketItemProps {
   ticket: Ticket & { profile: Profile }
   isDetail?: boolean;
+  comments?: CommentWithMetadata[]
 }
 
-const TicketItem = async ({ ticket, isDetail }: TicketItemProps) => {
+const TicketItem = async ({ ticket, isDetail, comments = [] }: TicketItemProps) => {
   const profileData = await requireProfile();
   const isTicketOwner = isOwner(profileData?.profile, ticket);
 
@@ -87,7 +91,17 @@ const TicketItem = async ({ ticket, isDetail }: TicketItemProps) => {
           /> : null}
         </div>
       </div>
-      {isDetail ? <Comments ticketId={ticket.id} /> : null}
+      {isDetail ? (
+        <Suspense fallback={
+          <div className="flex flex-col gap-4">
+            <Skeleton className="h-[250px] w-full" />
+            <Skeleton className="h-[800px] ml-8" />
+            <Skeleton className="h-[250px] ml-8" />
+          </div>
+        }>
+          <Comments ticketId={ticket.id} comments={comments} />
+        </Suspense>
+      ) : null}
     </div>
   )
 };

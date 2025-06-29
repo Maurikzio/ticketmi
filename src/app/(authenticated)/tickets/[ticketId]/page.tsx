@@ -1,6 +1,7 @@
 
 import Breadcrumbs from "@/components/breadrumbs";
 import { Separator } from "@/components/ui/separator";
+import { getComments } from "@/features/comment/queries/get-comments";
 import TicketItem from "@/features/ticket/components/ticket-item";
 import { getTicket } from "@/features/ticket/queries/get-ticket";
 import { notFound } from "next/navigation";
@@ -11,7 +12,9 @@ type TicketPageProps = {
 
 export default async function Ticketpage({ params }: TicketPageProps) {
   const { ticketId } = await params;
-  const ticket = await getTicket(ticketId);
+  const ticketPromise = getTicket(ticketId);
+  const commentsPromise = getComments(ticketId);
+  const [ticket, comments] = await Promise.all([ticketPromise, commentsPromise])
 
   if (!ticket) {
     notFound()
@@ -24,7 +27,7 @@ export default async function Ticketpage({ params }: TicketPageProps) {
       <Breadcrumbs breadcrumbs={breadcrumbs} />
       <Separator />
       <div className="font-[family-name:var(--font-geist-sans)] flex justify-center animate-fade-in-from-top">
-        <TicketItem ticket={ticket} isDetail={true} />
+        <TicketItem ticket={ticket} isDetail={true} comments={comments} />
       </div>
     </div>
   );
