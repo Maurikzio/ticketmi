@@ -19,6 +19,7 @@ import { isOwner } from "@/features/auth/utils/is-owner";
 import Comments from "@/features/comment/components/comments";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { CommentWithMetadata } from "@/features/comment/definitions";
 
 const TICKET_ICONS = {
   "OPEN": <File className="h-4 w-4" />,
@@ -29,9 +30,10 @@ const TICKET_ICONS = {
 interface TicketItemProps {
   ticket: Ticket & { profile: Profile }
   isDetail?: boolean;
+  comments?: CommentWithMetadata[]
 }
 
-const TicketItem = async ({ ticket, isDetail }: TicketItemProps) => {
+const TicketItem = async ({ ticket, isDetail, comments = [] }: TicketItemProps) => {
   const profileData = await requireProfile();
   const isTicketOwner = isOwner(profileData?.profile, ticket);
 
@@ -97,7 +99,7 @@ const TicketItem = async ({ ticket, isDetail }: TicketItemProps) => {
             <Skeleton className="h-[250px] ml-8" />
           </div>
         }>
-          <Comments ticketId={ticket.id} />
+          <Comments ticketId={ticket.id} comments={comments} />
         </Suspense>
       ) : null}
     </div>
