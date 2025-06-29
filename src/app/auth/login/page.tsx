@@ -1,5 +1,5 @@
 import CardCompact from "@/components/card-compact";
-import LogInForm from "@/features/auth/components/login-with-use-transition";
+import LogInForm from "@/features/auth/components/login-form";
 import { forgotPasswordPath, signUpPath } from "@/paths";
 import Link from "next/link";
 
