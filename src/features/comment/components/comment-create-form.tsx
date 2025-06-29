@@ -3,29 +3,28 @@
 import { Textarea } from "@/components/ui/textarea"
 import { createComment } from "../actions/create-comment"
 import SubmitButton from "@/components/form/submit-button"
-import { useActionState, useMemo } from "react"
-import { CommentFormState } from "../definitions"
+import { useActionState, useEffect } from "react"
+import { CommentFormState, CommentWithMetadata } from "../definitions"
 import { toast } from "sonner";
-import useActionFeedback from "@/components/form/hooks/use-action-feedback"
 
 interface CommentCreateformProps {
   ticketId: string
+  onSucessAction?: (comment: CommentWithMetadata) => void
 }
 
-const CommentCreateform = ({ ticketId }: CommentCreateformProps) => {
+const CommentCreateform = ({ ticketId, onSucessAction }: CommentCreateformProps) => {
   const initialState: CommentFormState = { message: "", errors: {}, status: "idle" }
   const [actionState, action] = useActionState(createComment.bind(null, ticketId), initialState)
 
-  const options = useMemo(() => ({
-    onSuccess() {
-      toast.success(actionState.message || "Success!");
-    },
-    onError() {
+  useEffect(() => {
+    if (actionState.status === "success" && actionState.data) {
+      onSucessAction?.(actionState.data as CommentWithMetadata)
+      toast.error(actionState.message || "Something went wrong");
+    } else if (actionState.status === "error") {
       toast.error(actionState.message || "Something went wrong");
     }
-  }), [actionState.message])
-
-  useActionFeedback(actionState.status as string, options)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [actionState])
 
   return (
     <form action={action} className="flex flex-col gap-2">

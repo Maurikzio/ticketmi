@@ -41,13 +41,24 @@ export const createComment = async (ticketId: string, _actionState: CommentFormS
   const { content } = validatedFields.data;
 
   try {
-    await prisma.comment.create({
+    const comment = await prisma.comment.create({
       data: {
         authorId: profile.id,
         ticketId,
         content
+      },
+      include: {
+        author: {
+          select: {
+            id: true,
+            userName: true,
+            userLastname: true
+          }
+        }
       }
     })
+    revalidatePath(ticketPath(ticketId))
+    return { message: "Comment created", status: "success", data: comment }
   } catch (error) {
     return {
       status: "error",
@@ -55,6 +66,6 @@ export const createComment = async (ticketId: string, _actionState: CommentFormS
     }
   }
 
-  revalidatePath(ticketPath(ticketId))
-  return { message: "Comment created", status: "success" }
+  // revalidatePath(ticketPath(ticketId))
+  // return { message: "Comment created", status: "success" }
 }

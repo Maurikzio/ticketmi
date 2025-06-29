@@ -14,7 +14,7 @@ export default async function Ticketpage({ params }: TicketPageProps) {
   const { ticketId } = await params;
   const ticketPromise = getTicket(ticketId);
   const commentsPromise = getComments(ticketId);
-  const [ticket, comments] = await Promise.all([ticketPromise, commentsPromise])
+  const [ticket, paginatedComments] = await Promise.all([ticketPromise, commentsPromise])
 
   if (!ticket) {
     notFound()
@@ -27,7 +27,7 @@ export default async function Ticketpage({ params }: TicketPageProps) {
       <Breadcrumbs breadcrumbs={breadcrumbs} />
       <Separator />
       <div className="font-[family-name:var(--font-geist-sans)] flex justify-center animate-fade-in-from-top">
-        <TicketItem ticket={ticket} isDetail={true} comments={comments} />
+        <TicketItem ticket={ticket} isDetail={true} paginatedComments={paginatedComments} />
       </div>
     </div>
   );
