@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import getProfile from "@/features/auth/queries/get-profile";
 import { Profile } from "@prisma/client";
 import { LucideUser } from "lucide-react";
-import LogoutButton from "./logout-button-with-use-transition";
+import { LogoutButton } from "@/features/auth/components/logout-button-client";
 
 const AccountDropdown = () => {
   const [profile, setProfile] = useState<Profile | undefined>(undefined)
