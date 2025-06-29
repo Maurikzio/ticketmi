@@ -19,4 +19,5 @@ export interface CommentFormState {
   errors?: {
     content?: string[]
   }
+  data?: unknown
 }

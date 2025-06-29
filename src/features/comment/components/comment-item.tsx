@@ -6,9 +6,10 @@ import { format } from "date-fns"
 interface CommentItemProps {
   comment: CommentWithMetadata
   isFromCurrentUser: boolean
+  handleDeleteComment: () => void,
 }
 
-const CommentItem = ({ comment, isFromCurrentUser }: CommentItemProps) => {
+const CommentItem = ({ comment, isFromCurrentUser, handleDeleteComment }: CommentItemProps) => {
   const commentAuthor = comment.author
     ? `${comment.author.userName} ${comment.author.userLastname[0]}.`
     : "Anonymous User"
@@ -25,7 +26,7 @@ const CommentItem = ({ comment, isFromCurrentUser }: CommentItemProps) => {
         </div>
         <p className="whitespace-pre-line">{comment.content}</p>
       </Card>
-      {isFromCurrentUser ? <CommentDeleteButton commentId={comment.id} /> : null}
+      {isFromCurrentUser ? <CommentDeleteButton commentId={comment.id} handleDeleteComment={handleDeleteComment} /> : null}
     </div>
   )
 };

@@ -30,10 +30,13 @@ const TICKET_ICONS = {
 interface TicketItemProps {
   ticket: Ticket & { profile: Profile }
   isDetail?: boolean;
-  comments?: CommentWithMetadata[]
+  paginatedComments?: {
+    list: CommentWithMetadata[]
+    metadata: { count: number, hasNextPage: boolean }
+  }
 }
 
-const TicketItem = async ({ ticket, isDetail, comments = [] }: TicketItemProps) => {
+const TicketItem = async ({ ticket, isDetail, paginatedComments }: TicketItemProps) => {
   const profileData = await requireProfile();
   const isTicketOwner = isOwner(profileData?.profile, ticket);
 
@@ -91,7 +94,7 @@ const TicketItem = async ({ ticket, isDetail, comments = [] }: TicketItemProps) 
           /> : null}
         </div>
       </div>
-      {isDetail ? (
+      {isDetail && paginatedComments?.list.length ? (
         <Suspense fallback={
           <div className="flex flex-col gap-4">
             <Skeleton className="h-[250px] w-full" />
@@ -99,7 +102,7 @@ const TicketItem = async ({ ticket, isDetail, comments = [] }: TicketItemProps) 
             <Skeleton className="h-[250px] ml-8" />
           </div>
         }>
-          <Comments ticketId={ticket.id} comments={comments} />
+          <Comments ticketId={ticket.id} paginatedComments={paginatedComments} currentProfileId={profileData?.profile.id} />
         </Suspense>
       ) : null}
     </div>
