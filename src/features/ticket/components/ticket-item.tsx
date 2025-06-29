@@ -16,6 +16,7 @@ import { formatCurrency } from "@/utils/currency";
 import TicketMoreMenu from "./ticket-more-menu";
 import { requireProfile } from "@/features/auth/utils/requireProfile";
 import { isOwner } from "@/features/auth/utils/is-owner";
+import Comments from "@/features/comment/components/comments";
 
 const TICKET_ICONS = {
   "OPEN": <File className="h-4 w-4" />,
@@ -33,34 +34,35 @@ const TicketItem = async ({ ticket, isDetail }: TicketItemProps) => {
   const isTicketOwner = isOwner(profileData?.profile, ticket);
 
   return (
-    <div className={clsx("w-full flex gap-x-1", { "max-w-[420px]": !isDetail, "max-w-[580px]": isDetail })}>
-      <Card className="w-full ">
-        <CardHeader>
-          <CardTitle className="flex gap-x-2 items-center">
-            <div>{TICKET_ICONS[ticket.status]}</div>
-            <h3 className="text-2xl">{ticket.title}</h3>
-          </CardTitle>
-          <CardDescription>Information of your ticket below.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <span className={clsx({ "line-through": ticket.status === "DONE", "line-clamp-3": !isDetail })}>
-            {ticket.content}
-          </span>
-        </CardContent>
-        <CardFooter className="flex justify-between">
-          <p className="text-sm text-muted-foreground">{ticket.deadline} by {ticket.profile.userName} {ticket.profile.userLastname}</p>
-          <p className="text-sm text-muted-foreground">{formatCurrency(ticket.bounty)}</p>
-        </CardFooter>
-      </Card>
-      <div className="flex flex-col gap-y-1">
-        {!isDetail ? (
-          <Button variant="outline" asChild size="icon">
-            <Link prefetch href={ticketPath(ticket.id)}>
-              <ExternalLink />
-            </Link>
-          </Button>
-        ) : null}
-        {/* (
+    <div className={clsx("w-full flex flex-col gap-4", { "max-w-[420px]": !isDetail, "max-w-[580px]": isDetail })}>
+      <div className="w-full flex gap-x-1">
+        <Card className="w-full ">
+          <CardHeader>
+            <CardTitle className="flex gap-x-2 items-center">
+              <div>{TICKET_ICONS[ticket.status]}</div>
+              <h3 className="text-2xl">{ticket.title}</h3>
+            </CardTitle>
+            <CardDescription>Information of your ticket below.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <span className={clsx({ "line-through": ticket.status === "DONE", "line-clamp-3": !isDetail })}>
+              {ticket.content}
+            </span>
+          </CardContent>
+          <CardFooter className="flex justify-between">
+            <p className="text-sm text-muted-foreground">{ticket.deadline} by {ticket.profile.userName} {ticket.profile.userLastname}</p>
+            <p className="text-sm text-muted-foreground">{formatCurrency(ticket.bounty)}</p>
+          </CardFooter>
+        </Card>
+        <div className="flex flex-col gap-y-1">
+          {!isDetail ? (
+            <Button variant="outline" asChild size="icon">
+              <Link prefetch href={ticketPath(ticket.id)}>
+                <ExternalLink />
+              </Link>
+            </Button>
+          ) : null}
+          {/* (
           <ConfirmDialog
             action={deleteTicket.bind(null, ticket.id)}
             trigger={
@@ -70,20 +72,22 @@ const TicketItem = async ({ ticket, isDetail }: TicketItemProps) => {
             }
           />
         )} */}
-        {isTicketOwner ? <Button variant="outline" size="icon" asChild>
-          <Link prefetch href={ticketEditPath(ticket.id)}>
-            <Pencil />
-          </Link>
-        </Button> : null}
-        {isTicketOwner ? <TicketMoreMenu
-          ticket={ticket}
-          trigger={
-            <Button variant="outline" size="icon">
-              <MoreVertical />
-            </Button>
-          }
-        /> : null}
+          {isTicketOwner ? <Button variant="outline" size="icon" asChild>
+            <Link prefetch href={ticketEditPath(ticket.id)}>
+              <Pencil />
+            </Link>
+          </Button> : null}
+          {isTicketOwner ? <TicketMoreMenu
+            ticket={ticket}
+            trigger={
+              <Button variant="outline" size="icon">
+                <MoreVertical />
+              </Button>
+            }
+          /> : null}
+        </div>
       </div>
+      {isDetail ? <Comments ticketId={ticket.id} /> : null}
     </div>
   )
 };
