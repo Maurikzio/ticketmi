@@ -18,6 +18,7 @@ const LogoutButton = () => {
         toast.error(result.error)
       } else {
         router.push(homePath);
+        router.refresh();
         toast.success("Successfully signed out")
       }
 

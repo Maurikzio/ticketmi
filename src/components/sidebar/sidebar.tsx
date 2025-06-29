@@ -7,20 +7,13 @@ import SidebarItem from "./sidebar-item";
 import { usePathname } from "next/navigation";
 import { getActivePath } from "@/utils/get-active-path";
 import { signInPath, signUpPath } from "@/paths";
-import { createClient } from "@/utils/supabase/client";
-import { User } from "@supabase/supabase-js";
+import useAuth from "@/features/auth/hooks/use-auth";
 
 const Sidebar = () => {
   const [isTransition, setIsTransition] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
-  const [user, setUser] = useState<User | null>(null);
-  const { auth } = createClient()
-
-  auth.onAuthStateChange(async (event, session) => {
-    setUser(session?.user || null)
-  })
-
+  const { user } = useAuth()
   const { activeIndex } = getActivePath(pathname, navItems.map(item => item.href), [signInPath, signUpPath])
 
   const handleToggle = (open: boolean) => {

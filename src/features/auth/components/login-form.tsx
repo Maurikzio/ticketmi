@@ -26,6 +26,7 @@ const LogInForm = () => {
       });
       if (error) throw error;
       router.push("/tickets");
+      router.refresh();
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "An error occurred");
     } finally {
