@@ -38,21 +38,23 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Header />
-          <div className="flex h-screen overflow-hidden border-collapse">
-            <Sidebar />
-            <main
-              className="
+          <NuqsAdapter>
+            <Header />
+            <div className="flex h-screen overflow-hidden border-collapse">
+              <Sidebar />
+              <main
+                className="
                 min-h-screen flex-1
                 overflow-y-auto overflow-x-hidden
                 py-24 px-8
                 bg-secondary/20
                 flex flex-col
               "
-            >
-              <NuqsAdapter>{children}</NuqsAdapter>
-            </main>
-          </div>
+              >
+                {children}
+              </main>
+            </div>
+          </NuqsAdapter>
           <Toaster />
         </ThemeProvider>
       </body>

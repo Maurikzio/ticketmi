@@ -1,25 +1,15 @@
 "use client"
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button"
 import { signInPath, signUpPath } from "@/paths";
 import { Separator } from "./ui/separator";
 // import LogoutButton from "./logout-button-with-use-transition";
-import { createClient } from "@/utils/supabase/client";
-import { User } from "@supabase/supabase-js";
 import AccountDropdown from "./account-dropdown";
+import useAuth from "@/features/auth/hooks/use-auth";
 
 const AuthButton = () => {
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    const { auth } = createClient()
-
-    auth.onAuthStateChange(async (event, session) => {
-      setUser(session?.user || null)
-    })
-  })
+  const { user } = useAuth()
 
   if (user) {
     return (

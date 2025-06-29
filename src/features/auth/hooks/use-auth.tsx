@@ -7,38 +7,27 @@ const useAuth = () => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const supabase = createClient()
+    const supabase = createClient();
 
-    const fetchUser = async () => {
+    const getInitialUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
-      setUser(user)
-      setLoading(false)
-    }
+      setUser(user);
+      setLoading(false);
+    };
 
-    fetchUser()
+    getInitialUser();
 
-    // Suscribirse a cambios de sesión
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null)
-    })
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        setUser(session?.user || null);
+        setLoading(false);
+      }
+    );
 
-    // const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
-    //   if(session?.user) {
-    //     const userData = await fetchUserData();
-    //     setData(userData)
-    //   } else  {
-    //     setData(null);
-    //   }
-    //   setLoading(false)
-    // })
+    return () => subscription?.unsubscribe();
+  }, []);
 
-    // Limpiar la suscripción al desmontar
-    return () => {
-      subscription?.unsubscribe()
-    }
-  }, [])
-
-  return { user, loading }
-}
+  return { user, loading };
+};
 
 export default useAuth;

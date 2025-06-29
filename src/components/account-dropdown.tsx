@@ -1,3 +1,5 @@
+"use client"
+
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import Link from "next/link";
