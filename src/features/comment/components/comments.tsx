@@ -2,6 +2,7 @@ import CardCompact from "@/components/card-compact";
 import { getComments } from "../queries/get-comments";
 import CommentItem from "./comment-item";
 import CommentCreateform from "./comment-create-form";
+import getProfile from "@/features/auth/queries/get-profile";
 
 interface CommentsProps {
   ticketId: string
@@ -9,6 +10,7 @@ interface CommentsProps {
 
 const Comments = async ({ ticketId }: CommentsProps) => {
   const comments = await getComments(ticketId)
+  const data = await getProfile();
 
   return (
     <>
@@ -19,7 +21,11 @@ const Comments = async ({ ticketId }: CommentsProps) => {
       />
       <div className="flex flex-col gap-2 ml-8">
         {comments.map(comment => (
-          <CommentItem key={comment.id} comment={comment} />
+          <CommentItem
+            key={comment.id}
+            comment={comment}
+            isFromCurrentUser={data?.profile.id === comment.author?.id}
+          />
         ))}
       </div>
     </>

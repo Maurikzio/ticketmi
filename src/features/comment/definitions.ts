@@ -4,6 +4,7 @@ export type CommentWithMetadata = Prisma.CommentGetPayload<{
   include: {
     author: {
       select: {
+        id: true,
         userName: true,
         userLastname: true
       }

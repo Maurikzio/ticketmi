@@ -8,6 +8,7 @@ export const getComments = async (ticketId: string) => {
     include: {
       author: {
         select: {
+          id: true,
           userName: true,
           userLastname: true,
         }
