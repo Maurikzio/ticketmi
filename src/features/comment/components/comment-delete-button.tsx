@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Trash } from "lucide-react";
 import { deleteComment } from "../actions/delete-comment";
-import useConfirmDialog from "@/components/use-confirm-dialog";
+import useConfirmDialog from "@/components/use-confirm-dialog-no-block";
 
 interface CommentDeleteButtonProps {
   commentId: string;
