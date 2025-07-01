@@ -95,7 +95,7 @@ const TicketItem = async ({ ticket, isDetail, paginatedComments }: TicketItemPro
           /> : null}
         </div>
       </div>
-      {isDetail && paginatedComments?.list.length ? (
+      {isDetail ? (
         <Suspense fallback={
           <div className="flex flex-col gap-4">
             <Skeleton className="h-[250px] w-full" />
