@@ -32,7 +32,8 @@ interface TicketItemProps {
   isDetail?: boolean;
   paginatedComments?: {
     list: CommentWithMetadata[]
-    metadata: { count: number, hasNextPage: boolean }
+    // metadata: { count: number, hasNextPage: boolean }
+    metadata: { count: number, hasNextPage: boolean, nextCursor?: string }
   }
 }
 
@@ -102,7 +103,7 @@ const TicketItem = async ({ ticket, isDetail, paginatedComments }: TicketItemPro
             <Skeleton className="h-[250px] ml-8" />
           </div>
         }>
-          <Comments ticketId={ticket.id} paginatedComments={paginatedComments} currentProfileId={profileData?.profile.id} />
+          <Comments ticketId={ticket.id} initialData={paginatedComments} currentProfileId={profileData?.profile.id} />
         </Suspense>
       ) : null}
     </div>

@@ -50,6 +50,8 @@ const useConfirmDialog = ({
     } else if (actionState.status === "error") {
       toast.error(actionState.message || "Something went wrong");
     }
+    // TODO: intentar memoizing callback
+    // onSuccessAction in dependecy array is making this effect to re-run and producing double toast!!
   }, [actionState, onSuccessAction])
 
   useEffect(() => {
