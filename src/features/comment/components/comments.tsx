@@ -11,7 +11,7 @@ import { LoaderCircle } from "lucide-react";
 import { useCallback } from "react";
 interface CommentsProps {
   ticketId: string
-  initialData: {
+  initialData?: {
     list: CommentWithMetadata[]
     metadata: { count: number, hasNextPage: boolean, nextCursor?: string }
   }
@@ -32,10 +32,10 @@ const Comments = ({ ticketId, initialData, currentProfileId }: CommentsProps) =>
     queryKey: ['comments', ticketId],
     queryFn: ({ pageParam }) => getComments(ticketId, pageParam),
     initialPageParam: undefined as string | undefined, // fixes type error in getNextPageParam!!!
-    initialData: {
+    initialData: initialData ? {
       pages: [initialData],
       pageParams: [undefined], // primer página no tiene cursor
-    },
+    } : undefined,
     getNextPageParam: (lastPage) => {
       return lastPage.metadata.hasNextPage ? lastPage.metadata.nextCursor : undefined;
     },
@@ -53,7 +53,7 @@ const Comments = ({ ticketId, initialData, currentProfileId }: CommentsProps) =>
     queryClient.invalidateQueries({ queryKey: ['comments', ticketId] })
   }, [queryClient, ticketId])
 
-  const comments = data?.pages.flatMap(page => page.list) ?? []
+  const comments = data?.pages.flatMap(page => page?.list) ?? []
 
   return (
     <>
@@ -62,30 +62,40 @@ const Comments = ({ ticketId, initialData, currentProfileId }: CommentsProps) =>
         description="A new comment will be created"
         content={<CommentCreateform ticketId={ticketId} onSucessAction={refreshComments} />}
       />
-      <div className="flex flex-col gap-2 ml-8">
-        {comments.map(comment => (
-          <CommentItem
-            key={comment.id}
-            comment={comment}
-            isFromCurrentUser={currentProfileId === comment.author?.id}
-            handleDeleteComment={refreshComments}
-          />
-        ))}
-      </div>
-
-      {hasNextPage ? <div className="flex flex-col justify-center ml-8">
-        {isFetchingNextPage ? (
-          <div className="flex items-center justify-center h-[36px]">
-            <LoaderCircle className="w-4 h-4 animate-spin" />
+      {comments.length > 0 ? (
+        <>
+          <div className="flex flex-col gap-2 ml-8">
+            {comments.map(comment => (
+              <CommentItem
+                key={comment.id}
+                comment={comment}
+                isFromCurrentUser={currentProfileId === comment.author?.id}
+                handleDeleteComment={refreshComments}
+              />
+            ))}
           </div>
-        ) : (
-          <Button variant="ghost" onClick={() => fetchNextPage()}>More</Button>
-        )}
-      </div> : (
+
+          {hasNextPage ? <div className="flex flex-col justify-center ml-8">
+            {isFetchingNextPage ? (
+              <div className="flex items-center justify-center h-[36px]">
+                <LoaderCircle className="w-4 h-4 animate-spin" />
+              </div>
+            ) : (
+              <Button variant="ghost" onClick={() => fetchNextPage()}>More</Button>
+            )}
+          </div> : (
+            <div className="h-[36px]">
+              <p className="text-right text-xs italic">No more comments.</p>
+            </div>
+          )}
+        </>
+      ) : (
         <div className="h-[36px]">
-          <p className="text-right text-xs italic">No more comments.</p>
+          <p className="text-right text-xs italic">No comments yet. Yours can be the first!</p>
         </div>
       )}
+
+
     </>
   )
 }
