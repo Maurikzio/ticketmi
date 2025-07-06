@@ -67,13 +67,13 @@ const seed = async () => {
 
   //3
   const dbOrganization = await prisma.organization.create({ data: { name: "Organization 1" } })
+  const dbProfiles = await prisma.profile.createManyAndReturn({ data: profiles })
   await prisma.userOrganization.create({
     data: {
-      userId: "26e5cd3f-d57f-4f7c-9fc9-300c8ffa661f",
+      profileId: dbProfiles[0].id,
       organizationId: dbOrganization.id
     }
   })
-  const dbProfiles = await prisma.profile.createManyAndReturn({ data: profiles })
   const dbTickets = await prisma.ticket.createManyAndReturn({
     data: tickets.map((ticket) => ({
       ...ticket,

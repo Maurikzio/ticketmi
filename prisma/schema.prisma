@@ -17,8 +17,9 @@ model Profile {
   userLastname String
 
   //Relaciones
-  tickets  Ticket[] //Remember, this is a virtual field only, there will not be a ticket field in table
-  comments Comment[]
+  tickets       Ticket[] //Remember, this is a virtual field only, there will not be a ticket field in table
+  comments      Comment[]
+  organizations UserOrganization[]
 
   @@index([userId])
 }
@@ -38,15 +39,18 @@ model UserOrganization {
 
   role     ROLE     @default(MEMBER)
   joinedAt DateTime @default(now())
+  isActive Boolean  @default(false)
 
   // relations
-  userId         String       @db.Uuid
+  profileId      String
+  profile        Profile      @relation(fields: [profileId], references: [id], onDelete: Cascade)
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, organizationId]) //John cannot be 2ice in same organization, crea como un indice automatico
-  @@index([userId]) // para busquedas por userId
+  @@unique([profileId, organizationId]) //John cannot be 2ice in same organization, crea como un indice automatico
+  @@index([profileId]) // para busquedas por userId
   @@index([role]) // para busquedas por role
+  @@index([isActive])
 }
 
 enum ROLE {

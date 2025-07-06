@@ -17,14 +17,14 @@ export const getOrganizationsByUser = async () => {
     where: {
       members: {
         some: {
-          userId: userData?.user.id
+          profileId: userData?.profile.id
         }
       }
     },
     include: {
       members: {
         where: {
-          userId: userData?.user.id
+          profileId: userData?.profile.id
         }
       },
       _count: {

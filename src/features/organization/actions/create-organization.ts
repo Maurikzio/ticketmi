@@ -6,6 +6,7 @@ import { z } from "zod"
 import { requireProfile } from "@/features/auth/utils/requireProfile"
 import { redirect } from "next/navigation"
 import { signInPath } from "@/paths"
+import { Prisma } from "@prisma/client"
 
 const createOrganizationSchema = z.object({
   name: z.string().min(1).max(191)
@@ -36,7 +37,7 @@ export const createOrganization = async (_actionState: OrganizationFormState, fo
         name,
         members: {
           create: {
-            userId: userData.user.id,
+            profileId: userData.profile.id,
             role: "ADMIN"
           }
         }
@@ -45,9 +46,12 @@ export const createOrganization = async (_actionState: OrganizationFormState, fo
 
     return { message: "Organization created", status: "success" }
   } catch (error) {
+    const message = error instanceof Prisma.PrismaClientValidationError
+      ? "Something went wrong"
+      : error instanceof Error ? error.message : "Something went wrong"
     return {
       status: "error",
-      message: error instanceof Error ? error.message : "Something went wrong"
+      message,
     }
   }
 

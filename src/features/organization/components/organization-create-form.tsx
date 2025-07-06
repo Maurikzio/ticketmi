@@ -19,6 +19,8 @@ const OrganizationCreateForm = () => {
     if (actionState.status === 'success') {
       toast.success(actionState.message)
       router.push("/tickets");
+    } else if (actionState.status === "error") {
+      toast.error(actionState.message)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actionState])
