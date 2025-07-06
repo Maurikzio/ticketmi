@@ -51,6 +51,8 @@ const seed = async () => {
   await prisma.profile.deleteMany()
   await prisma.ticket.deleteMany()
   await prisma.comment.deleteMany()
+  await prisma.organization.deleteMany()
+  await prisma.userOrganization.deleteMany()
 
   //1
   // for (const ticket of tickets) {
@@ -64,6 +66,13 @@ const seed = async () => {
   // await Promise.all(promises)
 
   //3
+  const dbOrganization = await prisma.organization.create({ data: { name: "Organization 1" } })
+  await prisma.userOrganization.create({
+    data: {
+      userId: "26e5cd3f-d57f-4f7c-9fc9-300c8ffa661f",
+      organizationId: dbOrganization.id
+    }
+  })
   const dbProfiles = await prisma.profile.createManyAndReturn({ data: profiles })
   const dbTickets = await prisma.ticket.createManyAndReturn({
     data: tickets.map((ticket) => ({

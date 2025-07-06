@@ -23,6 +23,37 @@ model Profile {
   @@index([userId])
 }
 
+model Organization {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String
+
+  //relations
+  members UserOrganization[]
+}
+
+model UserOrganization {
+  id String @id @default(cuid())
+
+  role     ROLE     @default(MEMBER)
+  joinedAt DateTime @default(now())
+
+  // relations
+  userId         String       @db.Uuid
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, organizationId]) //John cannot be 2ice in same organization, crea como un indice automatico
+  @@index([userId]) // para busquedas por userId
+  @@index([role]) // para busquedas por role
+}
+
+enum ROLE {
+  MEMBER
+  ADMIN
+}
+
 model Ticket {
   id        String       @id @default(cuid()) //mandatory to be
   createdAt DateTime     @default(now()) //mandatory to be
@@ -32,7 +63,7 @@ model Ticket {
   status    TicketStatus @default(OPEN)
   deadline  String
   bounty    Int
-  profileId String
+  profileId String //TODO: migrate to userId for better consistency.
 
   //Relaciones
   profile  Profile   @relation(fields: [profileId], references: [id], onDelete: Cascade)
