@@ -7,3 +7,4 @@ export const signInPath = '/auth/login'
 export const forgotPasswordPath = '/auth/forgot-password'
 export const accountProfilePath = "/account/profile";
 export const accountPasswordPath = "/account/password"
+export const organizationPath = "/organization"
