@@ -6,9 +6,9 @@ import { redirect } from "next/navigation"
 import { organizationsPath, signInPath } from "@/paths"
 import { Prisma } from "@prisma/client"
 import { revalidatePath } from "next/cache"
+import { getOrganizationsByUser } from "../query/get-organizations-by-user"
 
 export const switchOrganization = async (organizationId: string) => {
-  console.log('organizationId', organizationId)
   const userData = await requireProfile();
 
   if (!userData) {
@@ -16,6 +16,14 @@ export const switchOrganization = async (organizationId: string) => {
   }
 
   try {
+    const organizations = await getOrganizationsByUser();
+    const canSwitch = organizations.some(org => org.member.organizationId === organizationId)
+    if (!canSwitch) {
+      return {
+        status: "error",
+        message: "Not a member of this organization"
+      }
+    }
     // Desactivar todas las organizaciones del profile Excepto la que vamos a activar.
     await prisma.userOrganization.updateMany({
       where: {
@@ -53,6 +61,4 @@ export const switchOrganization = async (organizationId: string) => {
       message,
     }
   }
-
-  // return { message: "Comment created", status: "success" }
 }
