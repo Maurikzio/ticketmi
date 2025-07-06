@@ -5,6 +5,8 @@ import { redirect } from "next/navigation";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { ArrowLeftRight, ArrowUpRightFromSquare, Pen, Trash } from "lucide-react";
+import OrganizationSwitchButton from "./organization-switch-button";
+import SubmitButton from "@/components/form/submit-button-iconed";
 
 const OrganizationList = async () => {
   const userOrganizations = await getOrganizationsByUser();
@@ -26,9 +28,19 @@ const OrganizationList = async () => {
       </TableHeader>
       <TableBody>
         {userOrganizations.map((uo) => {
-          const switchButton = <Button variant="outline" size="icon">
-            <ArrowLeftRight className="w-4 h-4" />
-          </Button>
+          const isActive = uo.member.isActive;
+          const switchButton =
+            <OrganizationSwitchButton
+              organizationId={uo.id}
+              trigger={
+                <SubmitButton
+                  icon={<ArrowLeftRight />}
+                  label={isActive ? "Active" : "Switch"}
+                  variant={isActive ? "default" : "outline"}
+                />
+              }
+            />
+
           const detailButton = <Button variant="outline" size="icon">
             <ArrowUpRightFromSquare className="w-4 h-4" />
           </Button>

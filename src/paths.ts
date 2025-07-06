@@ -12,5 +12,5 @@ export const forgotPasswordPath = '/auth/forgot-password'
 export const accountProfilePath = "/account/profile";
 export const accountPasswordPath = "/account/password"
 
-export const organizationPath = "/organization"
+export const organizationsPath = "/organization"
 export const organizationCreatePath = "/organization/create"
