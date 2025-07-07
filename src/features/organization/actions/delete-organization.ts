@@ -28,7 +28,7 @@ export async function deleteOrganization(organizationId: string) {
       }
     })
 
-    revalidatePath(organizationsPath)
+    revalidatePath(organizationsPath) // we also can revalidate from the client using router.refresh() in onSuccessAction
     return {
       message: 'Organization deleted',
       status: "success"

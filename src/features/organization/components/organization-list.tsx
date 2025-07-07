@@ -39,29 +39,37 @@ const OrganizationList = async () => {
         </TableHeader>
         <TableBody>
           {userOrganizations.map((uo) => {
+            let label = "Active";
             const isActive = uo.member.isActive;
+            if (!hasOrganizationActive) {
+              label = "Activate"
+            } else if (isActive) {
+              label = "Active"
+            } else {
+              label = "Switch"
+            }
             const switchButton =
               <OrganizationSwitchButton
                 organizationId={uo.id}
                 trigger={
                   <SubmitButton
                     icon={<ArrowLeftRight />}
-                    label={isActive ? "Active" : "Switch"}
+                    label={label}
                     variant={isActive ? "default" : "outline"}
                   />
                 }
               />
 
-            const detailButton = <Button variant="outline" size="icon">
+            const detailButton = hasOrganizationActive ? <Button variant="outline" size="icon">
               <ArrowUpRightFromSquare className="w-4 h-4" />
-            </Button>
-            const editButton = <Button variant="outline" size="icon">
+            </Button> : null;
+            const editButton = hasOrganizationActive ? <Button variant="outline" size="icon">
               <Pen className="w-4 h-4" />
-            </Button>
-            const deleteButton =
+            </Button> : null;
+            const deleteButton = hasOrganizationActive ?
               <OrganizationDeleteButton
                 organizationId={uo.id}
-              />
+              /> : null
 
             const buttons = (
               <>
