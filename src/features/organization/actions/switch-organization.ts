@@ -1,19 +1,15 @@
 "use server"
 
 import { prisma } from "@/lib/prisma"
-import { requireProfile } from "@/features/auth/utils/requireProfile"
-import { redirect } from "next/navigation"
-import { organizationsPath, signInPath } from "@/paths"
+import { organizationsPath } from "@/paths"
 import { Prisma } from "@prisma/client"
 import { revalidatePath } from "next/cache"
 import { getOrganizationsByUser } from "../query/get-organizations-by-user"
+import { requireAuth } from "@/features/auth/utils/require-auth"
 
 export const switchOrganization = async (organizationId: string) => {
-  const userData = await requireProfile();
 
-  if (!userData) {
-    redirect(signInPath)
-  }
+  const context = await requireAuth({ requireOrganization: true })
 
   try {
     const organizations = await getOrganizationsByUser();
@@ -24,31 +20,33 @@ export const switchOrganization = async (organizationId: string) => {
         message: "Not a member of this organization"
       }
     }
-    // Desactivar todas las organizaciones del profile Excepto la que vamos a activar.
-    await prisma.userOrganization.updateMany({
-      where: {
-        profileId: userData.profile.id,
-        organizationId: {
-          not: organizationId // TOdas EXCEPTO la aue vamos a activar
-        }
-      },
-      data: {
-        isActive: false // Desactivar todas las demas
-      }
-    })
 
-    // Activar la organizacion seleccionada
-    await prisma.userOrganization.update({
-      where: {
-        profileId_organizationId: {
-          profileId: userData.profile.id,
-          organizationId // Solo esta organizacion
+    await prisma.$transaction([
+      // Desactivar todas las organizaciones del profile Excepto la que vamos a activar.
+      prisma.userOrganization.updateMany({
+        where: {
+          profileId: context.profile.id,
+          organizationId: {
+            not: organizationId // Todas EXCEPTO la aue vamos a activar
+          }
+        },
+        data: {
+          isActive: false // Desactivar todas las demas
         }
-      },
-      data: {
-        isActive: true // Activar la seleccionada
-      }
-    })
+      }),
+      // Activar la organizacion seleccionada
+      prisma.userOrganization.update({
+        where: {
+          profileId_organizationId: {
+            profileId: context.profile.id,
+            organizationId // Solo esta organizacion
+          }
+        },
+        data: {
+          isActive: true // Activar la seleccionada
+        }
+      })
+    ])
 
     revalidatePath(organizationsPath)
     return { message: "Active organization has been switched", status: "success" }
