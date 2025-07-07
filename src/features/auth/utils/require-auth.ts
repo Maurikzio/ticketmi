@@ -1,14 +1,28 @@
 import { prisma } from "@/lib/prisma";
 import { onboardingPath, organizationsPath, signInPath } from "@/paths";
 import { createClient } from "@/utils/supabase/server";
-import { Organization, Profile, ROLE } from "@prisma/client";
+import { Organization, Prisma, ROLE } from "@prisma/client";
 import { User } from "@supabase/supabase-js";
 import { redirect } from "next/navigation";
 import { cache } from "react";
 
+
+type ProfileWithOrganizations = Prisma.ProfileGetPayload<{
+  include: {
+    organizations: {
+      include: {
+        organization: {
+          include: {
+            _count: { select: { members: true } }
+          }
+        }
+      }
+    }
+  }
+}>
 interface AuthContext {
   user: User
-  profile: Profile
+  profile: ProfileWithOrganizations
   activeOrganization?: Organization;
   organizationRole?: ROLE
 }

@@ -3,10 +3,11 @@ import { format } from "date-fns";
 import { getOrganizationsByUser } from "../query/get-organizations-by-user";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { AlertCircleIcon, ArrowLeftRight, ArrowUpRightFromSquare, Pen, Trash } from "lucide-react";
+import { AlertCircleIcon, ArrowLeftRight, ArrowUpRightFromSquare, Pen } from "lucide-react";
 import OrganizationSwitchButton from "./organization-switch-button";
 import SubmitButton from "@/components/form/submit-button-iconed";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import OrganizationDeleteButton from "./organization-delete-button";
 
 const OrganizationList = async () => {
   const userOrganizations = await getOrganizationsByUser();
@@ -57,9 +58,10 @@ const OrganizationList = async () => {
             const editButton = <Button variant="outline" size="icon">
               <Pen className="w-4 h-4" />
             </Button>
-            const deleteButton = <Button variant="destructive" size="icon">
-              <Trash className="w-4 h-4" />
-            </Button>
+            const deleteButton =
+              <OrganizationDeleteButton
+                organizationId={uo.id}
+              />
 
             const buttons = (
               <>
