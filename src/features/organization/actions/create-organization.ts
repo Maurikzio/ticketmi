@@ -32,7 +32,7 @@ export const createOrganization = async (_actionState: OrganizationFormState, fo
   const { name } = validatedFields.data;
 
   try {
-    await prisma.organization.create({
+    const organization = await prisma.organization.create({
       data: {
         name,
         members: {
@@ -42,6 +42,18 @@ export const createOrganization = async (_actionState: OrganizationFormState, fo
           }
         }
       },
+    })
+
+    await prisma.userOrganization.updateMany({
+      where: {
+        profileId: userData.profile.id,
+        organizationId: {
+          not: organization.id
+        }
+      },
+      data: {
+        isActive: false
+      }
     })
 
     return { message: "Organization created", status: "success" }

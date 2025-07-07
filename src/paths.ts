@@ -14,3 +14,6 @@ export const accountPasswordPath = "/account/password"
 
 export const organizationsPath = "/organization"
 export const organizationCreatePath = "/organization/create"
+
+export const onboardingPath = "/onboarding"
+export const selectActiveOrganizationPath = "/onboarding/select-active-organization"
