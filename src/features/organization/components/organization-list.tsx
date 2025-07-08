@@ -8,6 +8,8 @@ import OrganizationSwitchButton from "./organization-switch-button";
 import SubmitButton from "@/components/form/submit-button-iconed";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import OrganizationDeleteButton from "./organization-delete-button";
+import Link from "next/link";
+import { organizationMembers } from "@/paths";
 
 const OrganizationList = async () => {
   const userOrganizations = await getOrganizationsByUser();
@@ -60,9 +62,13 @@ const OrganizationList = async () => {
                 }
               />
 
-            const detailButton = hasOrganizationActive ? <Button variant="outline" size="icon">
-              <ArrowUpRightFromSquare className="w-4 h-4" />
-            </Button> : null;
+            const detailButton = hasOrganizationActive ? (
+              <Button variant="outline" size="icon" asChild>
+                <Link href={organizationMembers(uo.id)}>
+                  <ArrowUpRightFromSquare className="w-4 h-4" />
+                </Link>
+              </Button>
+            ) : null;
             const editButton = hasOrganizationActive ? <Button variant="outline" size="icon">
               <Pen className="w-4 h-4" />
             </Button> : null;

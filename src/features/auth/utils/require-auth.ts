@@ -73,6 +73,7 @@ export const requireAuth = cache(async (options: AuthOptions = {}): Promise<Auth
     redirect(organizationsPath)
   }
 
+  // TODO: we are validating the role in the active organization not in an specific one, it can be kinda buggy if not used correctly
   //GUARD: verify specific role in user-organization
   if (options.requireRoleInOrganization && activeUserOrganization?.role !== options.requireRoleInOrganization) {
     throw new Error(`Access denied`)
