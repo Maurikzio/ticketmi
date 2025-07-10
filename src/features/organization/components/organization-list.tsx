@@ -10,6 +10,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import OrganizationDeleteButton from "./organization-delete-button";
 import Link from "next/link";
 import { organizationMembers } from "@/paths";
+import MemberDeleteButton from "./member-delete-button";
 
 const OrganizationList = async () => {
   const userOrganizations = await getOrganizationsByUser();
@@ -72,6 +73,9 @@ const OrganizationList = async () => {
             const editButton = hasOrganizationActive ? <Button variant="outline" size="icon">
               <Pen className="w-4 h-4" />
             </Button> : null;
+            const leaveButton = hasOrganizationActive ? (
+              <MemberDeleteButton organizationId={uo.id} profileId={uo.member.profileId} />
+            ) : null;
             const deleteButton = hasOrganizationActive ?
               <OrganizationDeleteButton
                 organizationId={uo.id}
@@ -82,6 +86,7 @@ const OrganizationList = async () => {
                 {switchButton}
                 {detailButton}
                 {editButton}
+                {leaveButton}
                 {deleteButton}
               </>
             )
