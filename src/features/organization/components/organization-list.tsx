@@ -20,7 +20,7 @@ const OrganizationList = async () => {
     <>
       {!hasOrganizationActive ? <Alert variant="destructive">
         <AlertCircleIcon />
-        <AlertTitle>Unable to continue</AlertTitle>
+        <AlertTitle>Unable to continue?</AlertTitle>
         <AlertDescription>
           <p>Please verify your organization information and try again.</p>
           <ul className="list-inside list-disc text-sm">

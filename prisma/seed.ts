@@ -70,11 +70,19 @@ const seed = async () => {
   //3
   const dbOrganization = await prisma.organization.create({ data: { name: "Organization 1" } })
   const dbProfiles = await prisma.profile.createManyAndReturn({ data: profiles })
-  await prisma.userOrganization.create({
-    data: {
-      profileId: dbProfiles[0].id,
-      organizationId: dbOrganization.id
-    }
+  await prisma.userOrganization.createMany({
+    data: [
+      {
+        profileId: dbProfiles[0].id,
+        organizationId: dbOrganization.id,
+        isActive: true,
+        role: "ADMIN"
+      },
+      {
+        profileId: dbProfiles[1].id,
+        organizationId: dbOrganization.id
+      }
+    ]
   })
   const dbTickets = await prisma.ticket.createManyAndReturn({
     data: tickets.map((ticket) => ({
