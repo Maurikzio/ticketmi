@@ -1,15 +1,20 @@
 "use server"
 
 import { prisma } from "@/lib/prisma"
-import { organizationsPath } from "@/paths"
+import { organizationsPath, signInPath } from "@/paths"
 import { Prisma } from "@prisma/client"
 import { revalidatePath } from "next/cache"
 import { getOrganizationsByUser } from "../query/get-organizations-by-user"
 import { requireAuth } from "@/features/auth/utils/require-auth"
+import { redirect } from "next/navigation"
 
 export const switchOrganization = async (organizationId: string) => {
 
   const context = await requireAuth({ requireOrganization: true })
+
+  if (!context.profile) {
+    redirect(signInPath)
+  }
 
   try {
     const organizations = await getOrganizationsByUser();

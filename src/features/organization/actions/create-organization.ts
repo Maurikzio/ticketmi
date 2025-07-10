@@ -5,6 +5,8 @@ import { OrganizationFormState } from "../definitions"
 import { z } from "zod"
 import { Prisma } from "@prisma/client"
 import { requireAuth } from "@/features/auth/utils/require-auth"
+import { signInPath } from "@/paths"
+import { redirect } from "next/navigation"
 
 const createOrganizationSchema = z.object({
   name: z.string().min(1).max(191)
@@ -12,6 +14,10 @@ const createOrganizationSchema = z.object({
 
 export const createOrganization = async (_actionState: OrganizationFormState, formData: FormData): Promise<OrganizationFormState> => {
   const context = await requireAuth()
+
+  if (!context.profile) {
+    redirect(signInPath)
+  }
 
   const validatedFields = createOrganizationSchema.safeParse({
     name: formData.get("name")
@@ -32,7 +38,7 @@ export const createOrganization = async (_actionState: OrganizationFormState, fo
           name,
           members: {
             create: {
-              profileId: context.profile.id,
+              profileId: context.profile!.id,
               role: "ADMIN",
               isActive: true,
             }
@@ -42,7 +48,7 @@ export const createOrganization = async (_actionState: OrganizationFormState, fo
 
       await tx.userOrganization.updateMany({
         where: {
-          profileId: context.profile.id,
+          profileId: context.profile!.id,
           organizationId: {
             not: organization.id
           }

@@ -2,9 +2,10 @@
 
 import { requireAuth } from "@/features/auth/utils/require-auth";
 import { prisma } from "@/lib/prisma";
-import { organizationsPath } from "@/paths";
+import { organizationsPath, signInPath } from "@/paths";
 import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 // import { revalidatePath } from "next/cache";
 // import { redirect } from "next/navigation";
 
@@ -13,6 +14,11 @@ export async function deleteOrganization(organizationId: string) {
   try {
 
     const context = await requireAuth({ requireOrganization: true })
+
+    if (!context.profile) {
+      redirect(signInPath)
+    }
+
     const canDelete = context.profile.organizations.some(uo => uo.organizationId === organizationId)
 
     if (!canDelete) {

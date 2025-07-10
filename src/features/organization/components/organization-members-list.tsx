@@ -9,7 +9,6 @@ interface OrganizationMembersListProps {
 
 const OrganizationMembersList = async ({ organizationId }: OrganizationMembersListProps) => {
   const organizationMembers = await getOrganizationMembers(organizationId);
-  console.log(organizationMembers)
 
   return (
     <div>
@@ -19,7 +18,7 @@ const OrganizationMembersList = async ({ organizationId }: OrganizationMembersLi
           <TableRow>
             <TableHead className="w-[100px]">Name</TableHead>
             <TableHead>Joined At</TableHead>
-            <TableHead>Email verified</TableHead>
+            <TableHead>Email</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -29,6 +28,7 @@ const OrganizationMembersList = async ({ organizationId }: OrganizationMembersLi
               <TableRow key={id}>
                 <TableCell className="font-medium">{`${profile.userName} ${profile.userLastname}`}</TableCell>
                 <TableCell>{format(joinedAt, "yyy-MM-dd , HH:mm")}</TableCell>
+                <TableCell>{om.profile.email}</TableCell>
               </TableRow>
             )
           })}
