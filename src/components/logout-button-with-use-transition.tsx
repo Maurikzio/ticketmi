@@ -1,7 +1,8 @@
 
 "use client"
 
-import { signOutV2 } from "@/features/auth/actions/sign-out"; import { useRouter } from "next/navigation";
+import { signOutV2 } from "@/features/auth/actions/sign-out";
+import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { toast } from "sonner";
 import { homePath } from "@/paths";

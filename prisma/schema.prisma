@@ -15,6 +15,7 @@ model Profile {
   userId       String   @unique @db.Uuid
   userName     String
   userLastname String
+  email        String   @unique
 
   //Relaciones
   tickets       Ticket[] //Remember, this is a virtual field only, there will not be a ticket field in table

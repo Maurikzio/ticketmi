@@ -2,14 +2,16 @@ import { prisma } from "@/lib/prisma"
 
 const profiles = [
   {
-    userId: "26e5cd3f-d57f-4f7c-9fc9-300c8ffa661f",
+    userId: "5a0f2f3d-0281-4729-96fa-1f2b22d4fc4c",
     userName: "Pedro",
     userLastname: "Fernandez",
+    email: "durodematar@yopmail.com",
   },
   {
     userId: "226a21fe-4ed4-45cc-80b3-c56ddf2fa32b",
     userName: "Ronaldinho",
-    userLastname: "Gaucho"
+    userLastname: "Gaucho",
+    email: "dinhodabest@yopmail.com"
   }
 ]
 

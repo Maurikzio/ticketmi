@@ -1,11 +1,10 @@
 import { prisma } from "@/lib/prisma";
-import { onboardingPath, organizationsPath, signInPath } from "@/paths";
+import { accountProfilePath, onboardingPath, organizationsPath, signInPath } from "@/paths";
 import { createClient } from "@/utils/supabase/server";
 import { Organization, Prisma, ROLE } from "@prisma/client";
 import { User } from "@supabase/supabase-js";
 import { redirect } from "next/navigation";
 import { cache } from "react";
-
 
 type ProfileWithOrganizations = Prisma.ProfileGetPayload<{
   include: {
@@ -22,12 +21,27 @@ type ProfileWithOrganizations = Prisma.ProfileGetPayload<{
 }>
 interface AuthContext {
   user: User
-  profile: ProfileWithOrganizations
+  profile: ProfileWithOrganizations | null;
   activeOrganization?: Organization;
   organizationRole?: ROLE
 }
 
+// interface AuthContextWithProfile {
+//   user: User
+//   profile: ProfileWithOrganizations
+//   activeOrganization?: Organization;
+//   organizationRole?: ROLE
+// }
+
+// interface AuthContextWithoutProfile {
+//   user: User
+//   profile: null
+//   activeOrganization?: undefined
+//   organizationRole?: undefined
+// }
+
 interface AuthOptions {
+  requireProfile?: boolean
   requireOrganization?: boolean;
   requireActiveOrganization?: boolean
   requireRoleInOrganization?: ROLE
@@ -35,6 +49,14 @@ interface AuthOptions {
 }
 
 export const requireAuth = cache(async (options: AuthOptions = {}): Promise<AuthContext> => {
+  const {
+    requireProfile = true,
+    requireOrganization,
+    requireActiveOrganization,
+    requireRoleInOrganization,
+    allowedRoles
+  } = options;
+
   const supabase = await createClient();
   const { data: { user }, error } = await supabase.auth.getUser();
 
@@ -57,30 +79,40 @@ export const requireAuth = cache(async (options: AuthOptions = {}): Promise<Auth
     }
   })
 
-  if (!profile) {
-    redirect(signInPath)
+  if (requireProfile && !profile) {
+    redirect(accountProfilePath)
   }
 
+  if (!profile) {
+    return {
+      user,
+      profile,
+      activeOrganization: undefined,
+      organizationRole: undefined,
+    }
+  }
+
+
   //GUARD: User should have at least ONE organization
-  if (options.requireOrganization && profile.organizations.length === 0) {
+  if (requireOrganization && profile.organizations.length === 0) {
     redirect(onboardingPath)
   }
 
   //GUARD: should have some active organization
   const activeUserOrganization = profile.organizations.find(org => org.isActive)
   const activeOrganization = activeUserOrganization?.organization
-  if (options.requireActiveOrganization && !activeOrganization) {
+  if (requireActiveOrganization && !activeOrganization) {
     redirect(organizationsPath)
   }
 
   // TODO: we are validating the role in the active organization not in an specific one, it can be kinda buggy if not used correctly
   //GUARD: verify specific role in user-organization
-  if (options.requireRoleInOrganization && activeUserOrganization?.role !== options.requireRoleInOrganization) {
+  if (requireRoleInOrganization && activeUserOrganization?.role !== requireRoleInOrganization) {
     throw new Error(`Access denied`)
   }
 
   //GUARD: verify allowed roles in user-organization
-  if (options.allowedRoles && !options.allowedRoles.includes(activeUserOrganization?.role as ROLE)) {
+  if (allowedRoles && !allowedRoles.includes(activeUserOrganization?.role as ROLE)) {
     throw new Error(`Access denied`)
   }
 
@@ -90,30 +122,35 @@ export const requireAuth = cache(async (options: AuthOptions = {}): Promise<Auth
     activeOrganization,
     organizationRole: activeUserOrganization?.role
   }
-});
-
-// For pages that need active organization
-export const requireActiveOrganization = cache(async (): Promise<AuthContext> => {
-  return requireAuth({
-    requireOrganization: true,
-    requireActiveOrganization: true
-  })
 })
+// as {
+//   (): Promise<AuthContextWithProfile>
+//   (options: AuthOptions & { requireProfile: false }): Promise<AuthContextWithoutProfile>
+//   (options: AuthOptions): Promise<AuthContextWithProfile>
+// }
 
-//For operations where org ADMIN is required
-export const requireAdmin = cache(async (): Promise<AuthContext> => {
-  return requireAuth({
-    requireOrganization: true,
-    requireActiveOrganization: true,
-    requireRoleInOrganization: 'ADMIN'
-  })
-})
+// // For pages that need active organization
+// export const requireActiveOrganization = cache(async (): Promise<AuthContext> => {
+//   return requireAuth({
+//     requireOrganization: true,
+//     requireActiveOrganization: true
+//   })
+// })
 
-//For every member in organization
-export const requireMember = cache(async (): Promise<AuthContext> => {
-  return requireAuth({
-    requireOrganization: true,
-    requireActiveOrganization: true,
-    allowedRoles: ["ADMIN", "MEMBER"]
-  })
-})
+// //For operations where org ADMIN is required
+// export const requireAdmin = cache(async (): Promise<AuthContext> => {
+//   return requireAuth({
+//     requireOrganization: true,
+//     requireActiveOrganization: true,
+//     requireRoleInOrganization: 'ADMIN'
+//   })
+// })
+
+// //For every member in organization
+// export const requireMember = cache(async (): Promise<AuthContext> => {
+//   return requireAuth({
+//     requireOrganization: true,
+//     requireActiveOrganization: true,
+//     allowedRoles: ["ADMIN", "MEMBER"]
+//   })
+// })
