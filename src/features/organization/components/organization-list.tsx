@@ -45,6 +45,8 @@ const OrganizationList = async () => {
           {userOrganizations.map((uo) => {
             let label = "Active";
             const isActive = uo.member.isActive;
+            const isAdmin = uo.member.role === "ADMIN";
+
             if (!hasOrganizationActive) {
               label = "Activate"
             } else if (isActive) {
@@ -52,6 +54,7 @@ const OrganizationList = async () => {
             } else {
               label = "Switch"
             }
+            const placeholderButton = <Button size="icon" disabled className="disabled:opacity-0" />
             const switchButton =
               <OrganizationSwitchButton
                 organizationId={uo.id}
@@ -64,23 +67,23 @@ const OrganizationList = async () => {
                 }
               />
 
-            const detailButton = hasOrganizationActive ? (
+            const detailButton = hasOrganizationActive && isAdmin ? (
               <Button variant="outline" size="icon" asChild>
                 <Link href={organizationMembers(uo.id)}>
                   <ArrowUpRightFromSquare className="w-4 h-4" />
                 </Link>
               </Button>
-            ) : null;
-            const editButton = hasOrganizationActive ? <Button variant="outline" size="icon">
+            ) : placeholderButton;
+            const editButton = hasOrganizationActive && isAdmin ? <Button variant="outline" size="icon">
               <Pen className="w-4 h-4" />
-            </Button> : null;
+            </Button> : placeholderButton;
             const leaveButton = hasOrganizationActive ? (
               <MemberDeleteButton organizationId={uo.id} profileId={uo.member.profileId} />
-            ) : null;
-            const deleteButton = hasOrganizationActive ?
+            ) : placeholderButton;
+            const deleteButton = hasOrganizationActive && isAdmin ?
               <OrganizationDeleteButton
                 organizationId={uo.id}
-              /> : null
+              /> : placeholderButton
 
             const buttons = (
               <>
