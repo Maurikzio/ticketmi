@@ -80,7 +80,8 @@ const seed = async () => {
       },
       {
         profileId: dbProfiles[1].id,
-        organizationId: dbOrganization.id
+        organizationId: dbOrganization.id,
+        role: "MEMBER"
       }
     ]
   })
