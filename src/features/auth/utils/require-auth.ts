@@ -19,26 +19,26 @@ type ProfileWithOrganizations = Prisma.ProfileGetPayload<{
     }
   }
 }>
-interface AuthContext {
-  user: User
-  profile: ProfileWithOrganizations | null;
-  activeOrganization?: Organization;
-  organizationRole?: ROLE
-}
-
-// interface AuthContextWithProfile {
+// interface AuthContext {
 //   user: User
-//   profile: ProfileWithOrganizations
+//   profile: ProfileWithOrganizations | null;
 //   activeOrganization?: Organization;
 //   organizationRole?: ROLE
 // }
 
-// interface AuthContextWithoutProfile {
-//   user: User
-//   profile: null
-//   activeOrganization?: undefined
-//   organizationRole?: undefined
-// }
+interface AuthContextWithProfile {
+  user: User
+  profile: ProfileWithOrganizations
+  activeOrganization?: Organization;
+  organizationRole?: ROLE
+}
+
+interface AuthContextWithoutProfile {
+  user: User
+  profile: null
+  activeOrganization?: undefined
+  organizationRole?: undefined
+}
 
 interface AuthOptions {
   requireProfile?: boolean
@@ -48,7 +48,7 @@ interface AuthOptions {
   allowedRoles?: ROLE[]
 }
 
-export const requireAuth = cache(async (options: AuthOptions = {}): Promise<AuthContext> => {
+export const requireAuth = cache(async (options: AuthOptions = {}) => {
   const {
     requireProfile = true,
     requireOrganization,
@@ -122,7 +122,12 @@ export const requireAuth = cache(async (options: AuthOptions = {}): Promise<Auth
     activeOrganization,
     organizationRole: activeUserOrganization?.role
   }
-})
+}) as {
+  (): Promise<AuthContextWithProfile>
+  (options: AuthOptions & { requireProfile: false }): Promise<AuthContextWithoutProfile>
+  (options: AuthOptions): Promise<AuthContextWithProfile>
+}
+
 // as {
 //   (): Promise<AuthContextWithProfile>
 //   (options: AuthOptions & { requireProfile: false }): Promise<AuthContextWithoutProfile>

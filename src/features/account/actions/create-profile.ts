@@ -15,8 +15,6 @@ const createProfileSchema = z.object({
 const createProfile = async (_actionState: CrateProfileFormState, formdata: FormData): Promise<CrateProfileFormState> => {
   const context = await requireAuth({ requireProfile: false });
 
-  console.log(context)
-
   const validatedFields = createProfileSchema.safeParse({
     userName: formdata.get('userName'),
     userLastname: formdata.get('userLastname')
@@ -30,34 +28,16 @@ const createProfile = async (_actionState: CrateProfileFormState, formdata: Form
 
   const { userName, userLastname } = validatedFields.data;
   try {
-
-    if (context.profile?.id) {
-      await prisma.profile.update({
-        where: {
-          id: context.profile.id
-        },
-        data: {
-          userId: context.user.id,
-          userName,
-          userLastname
-        }
-      })
-      revalidatePath('/', 'layout')
-      return { message: "Profile updated", status: "success" }
-    } else {
-      await prisma.profile.create({
-        data: {
-          userId: context.user.id,
-          userName,
-          userLastname,
-          email: "ssf"
-        }
-      })
-      revalidatePath('/', 'layout')
-      return { message: "Profile created", status: "success" }
-    }
-
-
+    await prisma.profile.create({
+      data: {
+        userId: context.user.id,
+        userName,
+        userLastname,
+        email: "ssf"
+      }
+    })
+    revalidatePath('/', 'layout')
+    return { message: "Profile created", status: "success" }
   } catch (error) {
     const message = error instanceof Prisma.PrismaClientValidationError
       ? "Something went wrong"

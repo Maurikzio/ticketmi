@@ -24,6 +24,43 @@ export async function deleteOrganizationMember({ profileId, organizationId }: { 
       }
     }
 
+    //check if uo/member exists
+    const targetMember = (orgMembers?.members || []).find(member => member.profileId === profileId)
+
+    if (!targetMember) {
+      return {
+        status: "error",
+        message: "Member not found"
+      }
+    }
+
+    //check if user is deleting last admin
+    const adminMembers = (orgMembers?.members ?? []).filter(
+      (member) => member.role === "ADMIN"
+    );
+
+    const removesAdmin = targetMember.role === "ADMIN";
+    const isLastAdmin = adminMembers.length <= 1;
+
+    if (removesAdmin && isLastAdmin) {
+      return {
+        status: "error",
+        message: "You cannot delete the last admin of an organization"
+      }
+    }
+
+    // check is who deletes is the admin
+    const myMembership = (orgMembers?.members || []).find(member => member.profileId === context.profile.id);
+    const isMyself = context.profile.id === profileId;
+    const isAdmin = myMembership?.role === "ADMIN";
+
+    if (!isMyself && !isAdmin) {
+      return {
+        message: 'You can only delete member as an admin',
+        status: "error"
+      }
+    }
+
     await prisma.userOrganization.delete({
       where: {
         profileId_organizationId: {
@@ -34,7 +71,7 @@ export async function deleteOrganizationMember({ profileId, organizationId }: { 
     })
 
     return {
-      message: 'Organization member deleted',
+      message: isMyself ? 'You have left the organization' : 'Organization member deleted',
       status: "success"
     }
   } catch (error) {
