@@ -5,23 +5,23 @@ import { accountProfilePath, homePath, organizationsPath, ticketsPath } from "@/
 export const navItems: NavItem[] = [
   {
     title: "All tickets",
-    icon: <Library className="h-5" />,
+    icon: <Library className="h-5 w-5" />,
     href: homePath,
   },
   {
     title: "My tickets",
-    icon: <Book className="h-5" />,
+    icon: <Book className="h-5 w-5" />,
     href: ticketsPath
   },
   {
     title: "Account",
-    icon: <CircleUser className="h-5" />,
+    icon: <CircleUser className="h-5 w-5" />,
     href: accountProfilePath,
     separator: true,
   },
   {
     title: "Organization",
-    icon: <Users className="h-5" />,
+    icon: <Users className="h-5 w-5" />,
     href: organizationsPath,
     separator: true,
   }

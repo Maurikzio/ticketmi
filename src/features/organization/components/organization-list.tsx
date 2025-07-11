@@ -38,6 +38,7 @@ const OrganizationList = async () => {
             <TableHead>Name</TableHead>
             <TableHead>Joined At</TableHead>
             <TableHead >Members</TableHead>
+            <TableHead >My Role</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -97,6 +98,7 @@ const OrganizationList = async () => {
                 <TableCell >{uo.name}</TableCell>
                 <TableCell>{format(uo.member.joinedAt, "yyy-MM-dd , HH:mm")}</TableCell>
                 <TableCell>{uo._count.members}</TableCell>
+                <TableCell>{uo.member.role}</TableCell>
                 <TableCell className="flex justify-end gap-2">
                   {buttons}
                 </TableCell>

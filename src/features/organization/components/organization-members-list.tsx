@@ -20,6 +20,7 @@ const OrganizationMembersList = async ({ organizationId }: OrganizationMembersLi
             <TableHead className="w-[100px]">Name</TableHead>
             <TableHead>Joined At</TableHead>
             <TableHead>Email</TableHead>
+            <TableHead>Role</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -36,6 +37,7 @@ const OrganizationMembersList = async ({ organizationId }: OrganizationMembersLi
                 <TableCell className="font-medium">{`${profile.userName} ${profile.userLastname}`}</TableCell>
                 <TableCell>{format(joinedAt, "yyy-MM-dd , HH:mm")}</TableCell>
                 <TableCell>{om.profile.email}</TableCell>
+                <TableCell>{om.role}</TableCell>
                 <TableCell>{buttons}</TableCell>
               </TableRow>
             )
