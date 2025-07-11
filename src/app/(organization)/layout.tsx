@@ -1,9 +1,10 @@
 import { requireAuth } from "@/features/auth/utils/require-auth";
-export default async function AuthenticatedLayout(
+
+export default async function OrganizationLayout(
   { children }: Readonly<{ children: React.ReactNode; }>
 ) {
 
-  await requireAuth({ requireOrganization: true, requireActiveOrganization: true })
+  await requireAuth({ requireOrganization: true })
 
   return <>{children}</>
 }

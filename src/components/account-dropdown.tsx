@@ -4,28 +4,48 @@ import { Avatar, AvatarFallback } from "./ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import Link from "next/link";
 import { accountPasswordPath, accountProfilePath } from "@/paths";
-import { useEffect, useState } from "react";
-import getProfile from "@/features/auth/queries/get-profile";
-import { Profile } from "@prisma/client";
-import { LucideUser } from "lucide-react";
+import { Loader2, LucideUser, User } from "lucide-react";
 import { LogoutButton } from "@/features/auth/components/logout-button-client";
+import { useProfile } from "@/features/auth/hooks/useProfile";
+import { Button } from "./ui/button";
 
 const AccountDropdown = () => {
-  const [profile, setProfile] = useState<Profile | undefined>(undefined)
+  // const [profile, setProfile] = useState<Profile | undefined>(undefined)
 
-  useEffect(() => {
-    const fetchProfileData = async () => {
-      const res = await getProfile()
-      setProfile(res?.profile)
-    }
-    fetchProfileData()
-  }, [])
+  // useEffect(() => {
+  //   const fetchProfileData = async () => {
+  //     const res = await getProfile()
+  //     setProfile(res?.profile)
+  //   }
+  //   fetchProfileData()
+  // }, [])
+
+  const { data: profile, isLoading } = useProfile()
+
+  if (isLoading) {
+    return (
+      <Button variant='ghost' disabled>
+        <Loader2 className="w-4 h-4 animate-spin" />
+      </Button>
+    )
+  }
+
+  if (!profile) {
+    return (
+      <Button variant="ghost" asChild>
+        <Link href={accountProfilePath}>
+          <User className="h-4 w-4" />
+          <span className="ml-2 hidden md:inline">Setup Profile</span>
+        </Link>
+      </Button>
+    )
+  }
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Avatar>
-          {profile ? <AvatarFallback>{profile.userName[0].toUpperCase()}</AvatarFallback> : null}
+          <AvatarFallback>{profile.userName[0].toUpperCase()}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">

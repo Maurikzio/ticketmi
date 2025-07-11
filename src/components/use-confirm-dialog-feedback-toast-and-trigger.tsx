@@ -43,8 +43,8 @@ const useConfirmDialog = ({
   useEffect(() => {
     if (actionState.status === "success") {
       if (typeof onSuccessAction === "function") {
-        onSuccessAction()
         toast.success(actionState.message || "Success!");
+        onSuccessAction()
       }
       setIsOpen(false)
     } else if (actionState.status === "error") {

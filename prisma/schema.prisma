@@ -15,12 +15,48 @@ model Profile {
   userId       String   @unique @db.Uuid
   userName     String
   userLastname String
+  email        String   @unique
 
   //Relaciones
-  tickets  Ticket[] //Remember, this is a virtual field only, there will not be a ticket field in table
-  comments Comment[]
+  tickets       Ticket[] //Remember, this is a virtual field only, there will not be a ticket field in table
+  comments      Comment[]
+  organizations UserOrganization[]
 
   @@index([userId])
+}
+
+model Organization {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String
+
+  //relations
+  members UserOrganization[]
+}
+
+model UserOrganization {
+  id String @id @default(cuid())
+
+  role     ROLE     @default(MEMBER)
+  joinedAt DateTime @default(now())
+  isActive Boolean  @default(false)
+
+  // relations
+  profileId      String
+  profile        Profile      @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([profileId, organizationId]) //John cannot be 2ice in same organization, crea como un indice automatico
+  @@index([profileId]) // para busquedas por userId
+  @@index([role]) // para busquedas por role
+  @@index([isActive])
+}
+
+enum ROLE {
+  MEMBER
+  ADMIN
 }
 
 model Ticket {
@@ -32,7 +68,7 @@ model Ticket {
   status    TicketStatus @default(OPEN)
   deadline  String
   bounty    Int
-  profileId String
+  profileId String //TODO: migrate to userId for better consistency.
 
   //Relaciones
   profile  Profile   @relation(fields: [profileId], references: [id], onDelete: Cascade)

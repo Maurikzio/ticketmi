@@ -3,6 +3,7 @@
 import { AuthState } from "@/features/ticket/definitions"
 import { createClient } from "@/utils/supabase/server"
 import { z } from "zod"
+// import { sendEmailPassword } from "../emails/send-email-password-reset"
 
 const forgotPasswordSchema = z
   .object({
@@ -33,6 +34,7 @@ const forgotPassword = async (_actionState: AuthState, formData: FormData): Prom
 
     if (error) throw error
 
+    // await sendEmailPassword("Pepito", email, '/tickets')
     return {
       success: "Check your email for a password reset link",
       values: { email }

@@ -2,14 +2,16 @@ import { prisma } from "@/lib/prisma"
 
 const profiles = [
   {
-    userId: "26e5cd3f-d57f-4f7c-9fc9-300c8ffa661f",
+    userId: "5a0f2f3d-0281-4729-96fa-1f2b22d4fc4c",
     userName: "Pedro",
     userLastname: "Fernandez",
+    email: "durodematar@yopmail.com",
   },
   {
-    userId: "dab9d23d-1c8d-4cb3-86e6-73a70ff3b9ec",
+    userId: "226a21fe-4ed4-45cc-80b3-c56ddf2fa32b",
     userName: "Ronaldinho",
-    userLastname: "Gaucho"
+    userLastname: "Gaucho",
+    email: "dinhodabest@yopmail.com"
   }
 ]
 
@@ -51,6 +53,8 @@ const seed = async () => {
   await prisma.profile.deleteMany()
   await prisma.ticket.deleteMany()
   await prisma.comment.deleteMany()
+  await prisma.organization.deleteMany()
+  await prisma.userOrganization.deleteMany()
 
   //1
   // for (const ticket of tickets) {
@@ -64,7 +68,23 @@ const seed = async () => {
   // await Promise.all(promises)
 
   //3
+  const dbOrganization = await prisma.organization.create({ data: { name: "Organization 1" } })
   const dbProfiles = await prisma.profile.createManyAndReturn({ data: profiles })
+  await prisma.userOrganization.createMany({
+    data: [
+      {
+        profileId: dbProfiles[0].id,
+        organizationId: dbOrganization.id,
+        isActive: true,
+        role: "ADMIN"
+      },
+      {
+        profileId: dbProfiles[1].id,
+        organizationId: dbOrganization.id,
+        role: "MEMBER"
+      }
+    ]
+  })
   const dbTickets = await prisma.ticket.createManyAndReturn({
     data: tickets.map((ticket) => ({
       ...ticket,
