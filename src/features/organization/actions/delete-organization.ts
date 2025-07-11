@@ -1,19 +1,17 @@
 "use server"
 
-import { requireAuth } from "@/features/auth/utils/require-auth";
+// import { requireAuth } from "@/features/auth/utils/require-auth";
 import { prisma } from "@/lib/prisma";
 import { organizationsPath, signInPath } from "@/paths";
 import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-// import { revalidatePath } from "next/cache";
-// import { redirect } from "next/navigation";
+import { getAdminOrRedirect } from "../query/get-admin-or-redirect";
 
 export async function deleteOrganization(organizationId: string) {
 
   try {
-
-    const context = await requireAuth({ requireOrganization: true })
+    const context = await getAdminOrRedirect(organizationId)
 
     if (!context.profile) {
       redirect(signInPath)

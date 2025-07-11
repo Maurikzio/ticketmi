@@ -49,7 +49,7 @@ export async function deleteOrganizationMember({ profileId, organizationId }: { 
       }
     }
 
-    // check is who deletes is the admin
+    // check is who deletes is the admin and authorized
     const myMembership = (orgMembers?.members || []).find(member => member.profileId === context.profile.id);
     const isMyself = context.profile.id === profileId;
     const isAdmin = myMembership?.role === "ADMIN";
