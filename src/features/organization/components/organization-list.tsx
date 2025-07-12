@@ -9,7 +9,7 @@ import SubmitButton from "@/components/form/submit-button-iconed";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import OrganizationDeleteButton from "./organization-delete-button";
 import Link from "next/link";
-import { organizationMembers } from "@/paths";
+import { organizationMembersPath } from "@/paths";
 import MemberDeleteButton from "./member-delete-button";
 
 const OrganizationList = async () => {
@@ -69,7 +69,7 @@ const OrganizationList = async () => {
 
             const detailButton = hasOrganizationActive && isAdmin ? (
               <Button variant="outline" size="icon" asChild>
-                <Link href={organizationMembers(uo.id)}>
+                <Link href={organizationMembersPath(uo.id)}>
                   <ArrowUpRightFromSquare className="w-4 h-4" />
                 </Link>
               </Button>
