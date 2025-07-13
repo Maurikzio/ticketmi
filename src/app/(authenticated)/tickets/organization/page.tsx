@@ -6,14 +6,14 @@ import TicketList from "@/features/ticket/components/ticket-list";
 import { ParsedSearchParams, searchParamsCache } from "@/features/ticket/definitions";
 import { Suspense } from "react";
 
-interface TicketspageProps {
+interface TicketsByOrganizationPageProps {
   searchParams: ParsedSearchParams
 }
 
-export default async function Ticketspage({ searchParams }: TicketspageProps) {
+export default async function TicketsByOrganizationPage({ searchParams }: TicketsByOrganizationPageProps) {
   return (
     <div className="font-[family-name:var(--font-geist-sans)] flex-1 flex flex-col gap-y-8">
-      <Heading title="My Tickets" description="All your tickets at one place" />
+      <Heading title="Our Tickets" description="All your tickets at one place" />
 
       <CardCompact
         className="w-full max-w-[420px] self-center"
@@ -23,7 +23,7 @@ export default async function Ticketspage({ searchParams }: TicketspageProps) {
       />
 
       <Suspense fallback={<Spinner />}>
-        <TicketList searchParams={searchParamsCache.parse(searchParams)} />
+        <TicketList searchParams={searchParamsCache.parse(searchParams)} byOrganization={true} />
       </Suspense>
     </div>
   );

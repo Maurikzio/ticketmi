@@ -7,11 +7,11 @@ import TicketPagination from "./ticket-pagination";
 import { ParsedSearchParams } from "../definitions";
 
 interface TicketListProps {
-  profileId?: string;
   searchParams: ParsedSearchParams
+  byOrganization?: boolean
 }
-const TicketList = async ({ profileId, searchParams }: TicketListProps) => {
-  const { list: tickets, metadata: ticketMetadata } = await getTickets(searchParams, profileId);
+const TicketList = async ({ searchParams, byOrganization }: TicketListProps) => {
+  const { list: tickets, metadata: ticketMetadata } = await getTickets(searchParams, byOrganization);
 
   const sortOptions = [
     { label: "Newest", value: "newest" },
