@@ -43,6 +43,9 @@ model UserOrganization {
   joinedAt DateTime @default(now())
   isActive Boolean  @default(false)
 
+  //permissions
+  canDeleteTicket Boolean @default(true)
+
   // relations
   profileId      String
   profile        Profile      @relation(fields: [profileId], references: [id], onDelete: Cascade)

@@ -3,6 +3,7 @@ import { getOrganizationMembers } from "../query/get-organization-members";
 import { format } from "date-fns";
 import MemberDeleteButton from "./member-delete-button";
 import MemberMoreMenu from "./member-more-menu";
+import PermissionToggle from "./permission-toggle";
 
 interface OrganizationMembersListProps {
   organizationId: string;
@@ -21,6 +22,7 @@ const OrganizationMembersList = async ({ organizationId }: OrganizationMembersLi
             <TableHead>Joined At</TableHead>
             <TableHead>Email</TableHead>
             <TableHead>Role</TableHead>
+            <TableHead>Can delete Ticket?</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -45,6 +47,14 @@ const OrganizationMembersList = async ({ organizationId }: OrganizationMembersLi
                 <TableCell>{format(joinedAt, "yyy-MM-dd , HH:mm")}</TableCell>
                 <TableCell>{om.profile.email}</TableCell>
                 <TableCell>{om.role}</TableCell>
+                <TableCell>
+                  <PermissionToggle
+                    profileId={om.profileId}
+                    organizationId={om.organizationId}
+                    permissionKey="canDeleteTicket"
+                    permissionValue={om.canDeleteTicket}
+                  />
+                </TableCell>
                 <TableCell>{buttons}</TableCell>
               </TableRow>
             )
