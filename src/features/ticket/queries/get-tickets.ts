@@ -1,19 +1,26 @@
 import { prisma } from "@/lib/prisma";
 import { ParsedSearchParams } from "../definitions";
+import { requireProfile } from "@/features/auth/utils/requireProfile";
+import { getActiveOrganization } from "./get-active-organization";
 
 // export const getTickets = async (): Promise<Ticket[]> => {
-export const getTickets = async (searchParams: ParsedSearchParams, profileId?: string,) => {
+export const getTickets = async (searchParams: ParsedSearchParams, byOrganization?: boolean) => {
   const { search, sort, page, size } = await searchParams;
+  const profileData = await requireProfile();
+  const activeOrganization = await getActiveOrganization();
 
   const skip = page * size;
   const take = size;
 
   const where = {
-    profileId,
+    profileId: profileData?.profile.id,
     title: {
       contains: search,
       mode: "insensitive" as const
-    }
+    },
+    ...(byOrganization && activeOrganization
+      ? { organizationId: activeOrganization.id }
+      : {})
   };
 
   const [tickets, count] = await prisma.$transaction([

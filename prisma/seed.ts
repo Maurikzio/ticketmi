@@ -88,7 +88,8 @@ const seed = async () => {
   const dbTickets = await prisma.ticket.createManyAndReturn({
     data: tickets.map((ticket) => ({
       ...ticket,
-      profileId: dbProfiles[0].id
+      profileId: dbProfiles[0].id,
+      organizationId: dbOrganization.id
     }))
   })
   await prisma.comment.createMany({
