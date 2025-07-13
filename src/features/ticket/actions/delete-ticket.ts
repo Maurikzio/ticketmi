@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { signInPath, ticketsPath } from "@/paths";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { getTicketPermissions } from "../queries/get-ticket-permissions";
 
 export async function deleteTicket(ticketId: string) {
   //artifitial delay
@@ -27,8 +28,14 @@ export async function deleteTicket(ticketId: string) {
     }
   }
 
-
   try {
+    const permissions = await getTicketPermissions({ organizationId: ticket.organizationId, profileId: profileData.profile.id });
+    if (!permissions.canDeleteTicket) {
+      return {
+        message: "Not Authorized",
+        status: "error",
+      }
+    }
     await prisma.ticket.delete({ where: { id: ticketId } })
   } catch (error) {
     console.error(error)

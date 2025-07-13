@@ -1,6 +1,6 @@
 'use client'
 
-import { Ticket, TicketStatus } from "@prisma/client"
+import { Profile, Ticket, TicketStatus } from "@prisma/client"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,7 +18,7 @@ import { deleteTicket } from "../actions/delete-ticket";
 import useConfirmDialog from "@/components/use-confirm-dialog";
 
 interface TicketMoreMenuProps {
-  ticket: Ticket;
+  ticket: Ticket & { profile: Profile; permissions: { canDeleteTicket: boolean } }
   trigger: React.ReactNode;
 }
 
@@ -27,7 +27,7 @@ const TicketMoreMenu = ({ ticket, trigger }: TicketMoreMenuProps) => {
   const [deleteButton, deleteDialog] = useConfirmDialog({
     action: deleteTicket.bind(null, ticket.id),
     trigger: (
-      <DropdownMenuItem>
+      <DropdownMenuItem disabled={!ticket.permissions.canDeleteTicket}>
         <TrashIcon className="h-4 w-4" />
         Delete
       </DropdownMenuItem>
