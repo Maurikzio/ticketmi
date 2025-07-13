@@ -21,6 +21,7 @@ model Profile {
   tickets       Ticket[] //Remember, this is a virtual field only, there will not be a ticket field in table
   comments      Comment[]
   organizations UserOrganization[]
+  invitesByUser Invitation[]
 
   @@index([userId])
 }
@@ -32,8 +33,9 @@ model Organization {
   name      String
 
   //relations
-  members UserOrganization[]
-  tickets Ticket[]
+  members     UserOrganization[]
+  tickets     Ticket[]
+  invitations Invitation[]
 }
 
 model UserOrganization {
@@ -104,4 +106,18 @@ model Comment {
 
   @@index([ticketId])
   @@index([authorId])
+}
+
+model Invitation {
+  email     String // because we might send invitations for no-profiled users in our platform
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  tokenHash String   @unique
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  invitedById    String?
+  invitedBy      Profile?     @relation(fields: [invitedById], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
 }
