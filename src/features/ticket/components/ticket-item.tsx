@@ -28,7 +28,7 @@ const TICKET_ICONS = {
 }
 
 interface TicketItemProps {
-  ticket: Ticket & { profile: Profile }
+  ticket: Ticket & { profile: Profile, permissions: { canDeleteTicket: boolean } }
   isDetail?: boolean;
   paginatedComments?: {
     list: CommentWithMetadata[]

@@ -1,7 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import { ParsedSearchParams } from "../definitions";
 import { requireProfile } from "@/features/auth/utils/requireProfile";
-import { getActiveOrganization } from "./get-active-organization";
+import { getActiveOrganization } from "../../organization/query/get-active-organization";
+import { getActiveUserOrganization } from "@/features/organization/query/get-active-user-organization";
 
 // export const getTickets = async (): Promise<Ticket[]> => {
 export const getTickets = async (searchParams: ParsedSearchParams, byOrganization?: boolean) => {
@@ -36,8 +37,10 @@ export const getTickets = async (searchParams: ParsedSearchParams, byOrganizatio
     })
   ])
 
+  const activeMembership = await getActiveUserOrganization();
+
   return {
-    list: tickets,
+    list: tickets.map(ticket => ({ ...ticket, permissions: { canDeleteTicket: !!activeMembership?.canDeleteTicket } })),
     metadata: {
       count,
       hasNextPage: count > skip + take

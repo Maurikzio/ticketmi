@@ -12,7 +12,7 @@ import {
 import { Fragment } from "react";
 
 type BreadcrumbItem = {
-  title: string;
+  title?: string;
   href?: string;
 }
 

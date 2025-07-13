@@ -3,7 +3,7 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Ticket } from "@prisma/client";
+import { Profile, Ticket } from "@prisma/client";
 import updateTicket from "../actions/update-ticket";
 import SubmitButton from "@/components/form/submit-button";
 import { useActionState, useMemo } from "react";
@@ -16,7 +16,7 @@ import { fromCent } from "@/utils/currency";
 import DatePicker from "@/components/date-picker";
 
 interface TicketUpdateFormProps {
-  ticket: Ticket
+  ticket: Ticket & { profile: Profile; permissions: { canDeleteTicket: boolean } }
 }
 
 const TicketUpdateForm = ({ ticket }: TicketUpdateFormProps) => {
