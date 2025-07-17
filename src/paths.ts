@@ -21,3 +21,5 @@ export const invitationsPath = (organizationId: string) => `/organization/${orga
 
 export const onboardingPath = "/onboarding"
 export const selectActiveOrganizationPath = "/onboarding/select-active-organization"
+
+export const emailInvitationPath = "/email-invitation"

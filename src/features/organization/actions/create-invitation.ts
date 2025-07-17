@@ -7,7 +7,7 @@ import { InvitationFormState } from "../definitions"
 import { revalidatePath } from "next/cache"
 import { invitationsPath } from "@/paths"
 import { prisma } from "@/lib/prisma"
-import { profile } from "console"
+import { generateInvitationLink } from "../utils/generate-invitation-link"
 
 const createInvitationSchema = z.object({
   email: z.string().min(1, { message: "Is required" }).max(191).email()
