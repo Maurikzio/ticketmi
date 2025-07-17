@@ -3,6 +3,7 @@ import Spinner from "@/components/spinner";
 import OrganizationMembersList from "@/features/organization/components/organization-members-list";
 import { Suspense } from "react";
 import OrganizationBreadcrumbs from "../_navigation/tabs";
+import { InvitationCreateButton } from "@/features/organization/components/invitation-create-button";
 
 interface OrganizationMembersPageProps {
   params: Promise<{ organizationId: string }>
@@ -16,6 +17,7 @@ export default async function OrganizationMembersPage({ params }: OrganizationMe
       <Heading
         title="Organization Members"
         description="All your organization members"
+        actions={<InvitationCreateButton organizationId={organizationId} />}
       />
       <Suspense fallback={<Spinner />}>
         <OrganizationMembersList organizationId={organizationId} />
