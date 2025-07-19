@@ -39,6 +39,7 @@ const InvitationCreateButton = ({ organizationId }: InvitationCreateButtonProps)
   useEffect(() => {
     if (actionState.status === 'success') {
       toast.success(actionState.message)
+      handleClose()
       // router.push("/tickets");
     } else if (actionState.status === "error") {
       toast.error(actionState.message)

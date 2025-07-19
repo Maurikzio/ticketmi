@@ -10,7 +10,7 @@ export const sendEmailInvitation = async (
   return await resend.emails.send({
     from: "no-reply@ticketmi.com", //"no-reply@app.ticketmi.com",
     to: email,
-    subject: `Invitation tp ${organizationName} from TicketMi`,
+    subject: `Invitation to ${organizationName} from TicketMi`,
     react: (
       <EmailInvitation
         fromUser={username}

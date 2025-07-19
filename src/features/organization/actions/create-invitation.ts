@@ -8,6 +8,7 @@ import { revalidatePath } from "next/cache"
 import { invitationsPath } from "@/paths"
 import { prisma } from "@/lib/prisma"
 import { generateInvitationLink } from "../utils/generate-invitation-link"
+import { inngest } from "@/lib/inngest"
 
 const createInvitationSchema = z.object({
   email: z.string().min(1, { message: "Is required" }).max(191).email()
@@ -48,7 +49,16 @@ export const createInvitation = async (organizationId: string, _actionState: Inv
   try {
 
     const emailInvitationLink = await generateInvitationLink(context.profile.id, organizationId, email)
-    console.log(emailInvitationLink)
+
+    await inngest.send({
+      name: "app/invitation.created",
+      data: {
+        profileId: context.profile.id,
+        organizationId,
+        email,
+        emailInvitationLink
+      }
+    })
 
     revalidatePath(invitationsPath(organizationId))
     return { status: "success" as const, message: "Invitation successfully sent" }

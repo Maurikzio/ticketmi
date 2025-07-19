@@ -15,7 +15,7 @@ const EmailInvitation = ({ fromUser, fromOrganization, url }: EmailInvitationPro
           <Container>
             <Section>
               <Text>
-                Hello there, {fromUser} invited you to join {fromOrganization}.<br />
+                Hello there, {fromUser} invited you to join {fromOrganization}.
                 Click the link below to accept the invitation.
               </Text>
             </Section>
