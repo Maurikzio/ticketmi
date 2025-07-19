@@ -17,5 +17,9 @@ export const organizationsPath = "/organization"
 export const organizationCreatePath = "/organization/create"
 export const organizationMembersPath = (organizationId: string) => `/organization/${organizationId}/members`
 
+export const invitationsPath = (organizationId: string) => `/organization/${organizationId}/invitations`
+
 export const onboardingPath = "/onboarding"
 export const selectActiveOrganizationPath = "/onboarding/select-active-organization"
+
+export const emailInvitationPath = "/email-invitation"
