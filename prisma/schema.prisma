@@ -120,6 +120,7 @@ model Invitation {
   invitedById    String?
   invitedBy      Profile?     @relation(fields: [invitedById], references: [id], onDelete: Cascade)
 
+  @@id([organizationId, email])
   @@index([organizationId])
 }
 
