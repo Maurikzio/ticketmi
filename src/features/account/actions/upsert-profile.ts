@@ -8,6 +8,12 @@ export async function upsertProfile(data: { userName: string, userLastname: stri
   try {
     const context = await requireAuth({ requireProfile: false })
 
+    // Check if profile exists before upsert
+    const existingProfile = await prisma.profile.findUnique({
+      where: { userId: context.user.id }
+    })
+    const isCreating = !existingProfile
+
     const profile = await prisma.profile.upsert({
       where: {
         userId: context.user.id
@@ -24,8 +30,33 @@ export async function upsertProfile(data: { userName: string, userLastname: stri
       }
     })
 
+    // If creating, create user organization/ MEMBER here
+    if (isCreating) {
+      const invitations = await prisma.invitation.findMany({
+        where: {
+          email: context.user.email!
+        }
+      })
+      await prisma.$transaction([
+        // Are we deleting ALL the user invitations, even from other organizations???
+        prisma.invitation.deleteMany({
+          where: {
+            email: context.user.email!
+          }
+        }),
+        // Are we creating the MEMBER for all the invitations, even tho we only clicked on 1 invitation????
+        prisma.userOrganization.createMany({
+          data: invitations.map(invitation => ({
+            organizationId: invitation.organizationId,
+            profileId: profile.id,
+            role: "MEMBER",
+            isActive: false,
+          }))
+        })
+      ])
+    }
 
-    return { success: true, profile, message: profile ? 'Profile updated' : 'Profile created' }
+    return { success: true, profile, message: isCreating ? 'Profile created' : 'Profile updated' }
   } catch (error) {
     console.log(error)
     const message = error instanceof Prisma.PrismaClientValidationError

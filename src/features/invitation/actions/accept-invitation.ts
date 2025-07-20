@@ -1,10 +1,9 @@
 "use server"
 
 import { prisma } from "@/lib/prisma"
-import { signInPath } from "@/paths"
+import { organizationsPath, signUpPath } from "@/paths"
 import { hashToken } from "@/utils/crypto"
 import { Prisma } from "@prisma/client"
-import { redirect } from "next/navigation"
 
 export const acceptInvitation = async (tokenId: string) => {
   try {
@@ -45,10 +44,27 @@ export const acceptInvitation = async (tokenId: string) => {
           }
         })
       ])
-      redirect("/organization")
-    } else {
 
-      redirect(signInPath)
+      return {
+        status: "success",
+        message: "Invitation accepted",
+        redirectTo: organizationsPath
+      }
+    } else {
+      await prisma.invitation.update({
+        where: {
+          tokenHash,
+        },
+        data: {
+          status: "ACCEPTED_WITHOUT_ACCOUNT"
+        }
+      })
+
+      return {
+        status: "success",
+        message: "Invitation accepted",
+        redirectTo: signUpPath
+      }
     }
 
   } catch (error) {
