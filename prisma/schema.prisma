@@ -81,10 +81,28 @@ model Ticket {
   comments       Comment[]
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId String
+  attachments    Attachment[]
 
   @@index([profileId])
   @@index([organizationId])
 }
+
+model Attachment {
+  id   String @id @default(cuid())
+  name String
+
+  //relations
+  ticketId String
+  ticket   Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  @@index([ticketId])
+}
+
+/**
+ * Why we dont have a s3keyFIle i.e.?
+ * Because the refrence to the file stored in S# will be composed by ticketId, organizationId, filename and attachment Id
+ * So, there is no need to store external explicit ID referencing S3
+ */
 
 enum TicketStatus {
   OPEN
