@@ -16,7 +16,8 @@ export const getOrganizationInvitations = async (organizationId: string) => {
           userName: true,
           userLastname: true
         }
-      }
+      },
+      organizationId: true
     }
   })
 

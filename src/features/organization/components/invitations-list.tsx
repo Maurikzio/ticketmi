@@ -1,9 +1,8 @@
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { getOrganizationInvitations } from "../query/get-organization-invitations";
 import Placeholder from "@/components/placeholder";
-import { Button } from "@/components/ui/button";
-import { Trash } from "lucide-react";
 import { format } from "date-fns";
+import InvitationDeleteButton from "./invitation-delete-button";
 
 
 interface InvitationListProps {
@@ -41,9 +40,13 @@ const InvitationList = async ({ organizationId }: InvitationListProps) => {
 
             // const deleteButton = <MemberDeleteButton organizationId={om.organizationId} profileId={profile.id} />
             const deleteButton = (
-              <Button variant="destructive" size="icon">
-                <Trash className="w-4 h-4" />
-              </Button>
+              <InvitationDeleteButton
+                email={invitation.email}
+                organizationId={invitation.organizationId}
+              />
+              // <Button variant="destructive" size="icon">
+              //   <Trash className="w-4 h-4" />
+              // </Button>
             )
             const buttons = <div className="flex gap-2">
               {deleteButton}

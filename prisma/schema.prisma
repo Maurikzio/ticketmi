@@ -110,14 +110,21 @@ model Comment {
 
 model Invitation {
   email     String // because we might send invitations for no-profiled users in our platform
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  tokenHash String   @unique
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  tokenHash String           @unique
+  status    InvitationStatus @default(PENDING)
 
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   invitedById    String?
   invitedBy      Profile?     @relation(fields: [invitedById], references: [id], onDelete: Cascade)
 
+  @@id([organizationId, email])
   @@index([organizationId])
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED_WITHOUT_ACCOUNT
 }

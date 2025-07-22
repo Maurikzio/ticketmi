@@ -55,6 +55,7 @@ const seed = async () => {
   await prisma.comment.deleteMany()
   await prisma.organization.deleteMany()
   await prisma.userOrganization.deleteMany()
+  await prisma.invitation.deleteMany()
 
   //1
   // for (const ticket of tickets) {
@@ -78,11 +79,11 @@ const seed = async () => {
         isActive: true,
         role: "ADMIN"
       },
-      {
-        profileId: dbProfiles[1].id,
-        organizationId: dbOrganization.id,
-        role: "MEMBER"
-      }
+      // {
+      //   profileId: dbProfiles[1].id,
+      //   organizationId: dbOrganization.id,
+      //   role: "MEMBER"
+      // }
     ]
   })
   const dbTickets = await prisma.ticket.createManyAndReturn({
