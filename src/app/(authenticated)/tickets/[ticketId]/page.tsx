@@ -1,6 +1,9 @@
 
 import Breadcrumbs from "@/components/breadrumbs";
 import { Separator } from "@/components/ui/separator";
+import Attachments from "@/features/attachments/components/attachments";
+import { isOwner } from "@/features/auth/utils/is-owner";
+import { requireProfile } from "@/features/auth/utils/requireProfile";
 import { getComments } from "@/features/comment/queries/get-comments";
 import TicketItem from "@/features/ticket/components/ticket-item";
 import { getTicket } from "@/features/ticket/queries/get-ticket";
@@ -20,6 +23,7 @@ export default async function Ticketpage({ params }: TicketPageProps) {
     notFound()
   }
 
+  const profileData = await requireProfile();
   const breadcrumbs = [{ title: "Tickets", href: "/tickets" }, { title: ticket.title }]
 
   return (
@@ -27,7 +31,14 @@ export default async function Ticketpage({ params }: TicketPageProps) {
       <Breadcrumbs breadcrumbs={breadcrumbs} />
       <Separator />
       <div className="font-[family-name:var(--font-geist-sans)] flex justify-center animate-fade-in-from-top">
-        <TicketItem ticket={ticket} isDetail={true} paginatedComments={paginatedComments} />
+        <TicketItem
+          ticket={ticket}
+          isDetail={true}
+          paginatedComments={paginatedComments}
+          attachments={
+            <Attachments ticketId={ticket.id} isOwner={isOwner(profileData?.profile, ticket)} />
+          }
+        />
       </div>
     </div>
   );
