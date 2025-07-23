@@ -8,6 +8,9 @@ import { Prisma } from "@prisma/client"
 import { revalidatePath } from "next/cache"
 import { ticketPath } from "@/paths"
 import { sizeInMb } from "../utils/size"
+import { s3 } from "@/lib/aws"
+import { PutObjectCommand } from "@aws-sdk/client-s3"
+import { generateS3Key } from "../utils/generate-s3-key"
 
 const createAttachmentsSchema = z.object({
   files: z.custom<FileList>()
@@ -70,8 +73,27 @@ export const createAttachments = async (
       //create buffer
       const buffer = await Buffer.from(await file.arrayBuffer());
       //upload to S3
+      const attachment = await prisma.attachment.create({
+        data: {
+          name: file.name,
+          ticketId
+        }
+      })
       //create database reference to S3 file
-
+      await s3.send(
+        new PutObjectCommand({
+          Bucket: process.env.AWS_BUCKET_NAME,
+          // Key: attachment.id,
+          Key: generateS3Key({
+            ticketId,
+            organizationId: ticket.organizationId,
+            fileName: file.name,
+            attachmentId: attachment.id
+          }),
+          Body: buffer,
+          ContentType: file.type
+        })
+      )
     }
 
     revalidatePath(ticketPath(ticket.id))
