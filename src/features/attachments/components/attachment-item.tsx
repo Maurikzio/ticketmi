@@ -1,11 +1,15 @@
 import { Attachment } from "@prisma/client"
 
 interface AttachmentItemProps {
-  attachment: Attachment
+  attachment: Attachment;
+  buttons: React.ReactNode[]
 }
-const AttachmentItem = ({ attachment }: AttachmentItemProps) => {
+const AttachmentItem = ({ attachment, buttons }: AttachmentItemProps) => {
   return (
-    <p className="text-sm">{attachment.name}</p>
+    <div className="flex justify-between items-center">
+      <p className="text-sm truncate">{attachment.name}</p>
+      {buttons}
+    </div>
   )
 }
 
