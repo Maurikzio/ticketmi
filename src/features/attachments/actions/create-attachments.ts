@@ -111,3 +111,10 @@ export const createAttachments = async (
     }
   }
 }
+
+/**
+ * CASE:
+ * file sending to aws s3 bucket failed, file stored in DB but not in aws S3.
+ * user got the error alert, page was not refreshed/revalidated and attachment record not visible in page
+ * after user refreshes the page the attachment is visible (but only the record from DB not from AWS S3)
+ */
