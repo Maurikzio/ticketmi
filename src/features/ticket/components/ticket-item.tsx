@@ -35,9 +35,10 @@ interface TicketItemProps {
     // metadata: { count: number, hasNextPage: boolean }
     metadata: { count: number, hasNextPage: boolean, nextCursor?: string }
   }
+  attachments?: React.ReactNode
 }
 
-const TicketItem = async ({ ticket, isDetail, paginatedComments }: TicketItemProps) => {
+const TicketItem = async ({ ticket, isDetail, paginatedComments, attachments }: TicketItemProps) => {
   const profileData = await requireProfile();
   const isTicketOwner = isOwner(profileData?.profile, ticket);
 
@@ -95,6 +96,7 @@ const TicketItem = async ({ ticket, isDetail, paginatedComments }: TicketItemPro
           /> : null}
         </div>
       </div>
+      {attachments}
       {isDetail ? (
         <Suspense fallback={
           <div className="flex flex-col gap-4">
