@@ -1,6 +1,7 @@
 "use server"
 
 import { requireAuth } from "@/features/auth/utils/require-auth"
+import { inngest } from "@/lib/inngest"
 import { prisma } from "@/lib/prisma"
 
 export const deleteAttachment = async (id: string) => {
@@ -28,6 +29,17 @@ export const deleteAttachment = async (id: string) => {
         id
       }
     })
+
+    await inngest.send({
+      name: "app/attachment.deleted",
+      data: {
+        attachmentId: attachment.id,
+        organizationId: attachment.ticket.organizationId,
+        ticketId: attachment.ticketId,
+        fileName: attachment.name
+      }
+    })
+
     return {
       message: 'Attachment deleted',
       status: "success"
