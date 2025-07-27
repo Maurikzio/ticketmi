@@ -88,14 +88,21 @@ model Ticket {
 }
 
 model Attachment {
-  id   String @id @default(cuid())
-  name String
-
+  id        String           @id @default(cuid())
+  name      String
+  entity    AttachmentEntity
   //relations
-  ticketId String
-  ticket   Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  ticketId  String?
+  ticket    Ticket?          @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  commentId String?
+  comment   Comment?         @relation(fields: [commentId], references: [id], onDelete: Cascade)
 
   @@index([ticketId])
+}
+
+enum AttachmentEntity {
+  TICKET
+  COMMENT
 }
 
 /**
@@ -119,8 +126,9 @@ model Comment {
   authorId String? // Reference to Profile who writes comment
   author   Profile? @relation(fields: [authorId], references: [id], onDelete: SetNull)
 
-  ticketId String
-  ticket   Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  ticketId    String
+  ticket      Ticket       @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  attachments Attachment[]
 
   @@index([ticketId])
   @@index([authorId])
