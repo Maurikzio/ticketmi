@@ -7,6 +7,7 @@ import { requireProfile } from "@/features/auth/utils/requireProfile";
 import { getComments } from "@/features/comment/queries/get-comments";
 import TicketItem from "@/features/ticket/components/ticket-item";
 import { getTicket } from "@/features/ticket/queries/get-ticket";
+import { AttachmentEntity } from "@prisma/client";
 import { notFound } from "next/navigation";
 
 type TicketPageProps = {
@@ -36,7 +37,11 @@ export default async function Ticketpage({ params }: TicketPageProps) {
           isDetail={true}
           paginatedComments={paginatedComments}
           attachments={
-            <Attachments ticketId={ticket.id} isOwner={isOwner(profileData?.profile, ticket)} />
+            <Attachments
+              entityId={ticket.id}
+              isOwner={isOwner(profileData?.profile, ticket)}
+              entity={AttachmentEntity.TICKET}
+            />
           }
         />
       </div>

@@ -4,7 +4,7 @@ import { z } from "zod"
 import { ACCEPTED_FILES, AttachmentFormState, FILE_MAX_SIZE } from "../definitions"
 import { requireAuth } from "@/features/auth/utils/require-auth"
 import { prisma } from "@/lib/prisma"
-import { Prisma } from "@prisma/client"
+import { AttachmentEntity, Prisma } from "@prisma/client"
 import { revalidatePath } from "next/cache"
 import { ticketPath } from "@/paths"
 import { sizeInMb } from "../utils/size"
@@ -27,47 +27,26 @@ const createAttachmentsSchema = z.object({
     .refine((files) => files.length !== 0, "File is required")
 })
 
-export const createAttachments = async (
-  ticketId: string,
-  _actionState: AttachmentFormState,
-  formData: FormData
-): Promise<AttachmentFormState> => {
-
-
-  const validatedFields = createAttachmentsSchema.safeParse({
-    files: formData.getAll("files")
-  })
-
-  if (!validatedFields.success) {
-    return {
-      errors: validatedFields.error.flatten().fieldErrors
-    }
-  }
-
-  const context = await requireAuth()
+const createTicketAttachment = async (ticketId: string, files: File[], userId: string): Promise<AttachmentFormState> => {
   const ticket = await prisma.ticket.findUnique({
-    where: {
-      id: ticketId
-    }
+    where: { id: ticketId },
   })
 
   if (!ticket) {
     return {
       message: "Ticket not found",
-      status: "error",
+      status: "error"
     }
   }
 
-  if (ticket.profileId !== context.profile.id) {
+  if (ticket.profileId !== userId) {
     return {
       message: "Not the owner of this ticket",
       status: "error",
     }
   }
 
-
   try {
-    const { files } = validatedFields.data;
 
     for (const file of files) {
       //create buffer
@@ -76,6 +55,7 @@ export const createAttachments = async (
       const attachment = await prisma.attachment.create({
         data: {
           name: file.name,
+          entity: AttachmentEntity.TICKET,
           ticketId
         }
       })
@@ -85,7 +65,8 @@ export const createAttachments = async (
           Bucket: process.env.AWS_BUCKET_NAME,
           // Key: attachment.id,
           Key: generateS3Key({
-            ticketId,
+            entity: "TICKET",
+            entityId: ticketId,
             organizationId: ticket.organizationId,
             fileName: file.name,
             attachmentId: attachment.id
@@ -98,18 +79,130 @@ export const createAttachments = async (
 
     revalidatePath(ticketPath(ticket.id))
     return {
-      message: "Attachment(s) uploaded",
+      message: "Attachment(s) for ticket uploaded successfully",
       status: "success",
     }
   } catch (error) {
     const message = error instanceof Prisma.PrismaClientValidationError
-      ? "Something went wrong"
+      ? "Database validation error"
       : error instanceof Error ? error.message : "Something went wrong"
     return {
       status: "error",
       message,
     }
   }
+}
+
+const createCommentAttachment = async (commentId: string, files: File[], userId: string): Promise<AttachmentFormState> => {
+  const comment = await prisma.comment.findUnique({
+    where: { id: commentId },
+    select: {
+      id: true,
+      authorId: true,
+      ticket: {
+        select: {
+          id: true,
+          profileId: true,
+          organizationId: true,
+        }
+      }
+    }
+  })
+
+  if (!comment) {
+    return {
+      message: "Comment not found",
+      status: "error"
+    }
+  }
+
+  if (comment.authorId !== userId) {
+    return {
+      message: "Not authorized",
+      status: "error"
+    }
+  }
+
+  try {
+    for (const file of files) {
+      //create buffer
+      const buffer = await Buffer.from(await file.arrayBuffer());
+      //upload to S3
+      const attachment = await prisma.attachment.create({
+        data: {
+          name: file.name,
+          entity: AttachmentEntity.COMMENT,
+          commentId
+        }
+      })
+      //create database reference to S3 file
+      await s3.send(
+        new PutObjectCommand({
+          Bucket: process.env.AWS_BUCKET_NAME,
+          // Key: attachment.id,
+          Key: generateS3Key({
+            entity: "COMMENT",
+            entityId: commentId,
+            organizationId: comment.ticket.organizationId,
+            fileName: file.name,
+            attachmentId: attachment.id
+          }),
+          Body: buffer,
+          ContentType: file.type
+        })
+      )
+    }
+
+    revalidatePath(ticketPath(comment.ticket.id))
+    return {
+      message: "Attachment(s) for comment uploaded successfully",
+      status: "success",
+    }
+  } catch (error) {
+    const message = error instanceof Prisma.PrismaClientValidationError
+      ? "Database validation error"
+      : error instanceof Error ? error.message : "Something went wrong"
+    return {
+      status: "error",
+      message,
+    }
+  }
+}
+
+export const createAttachments = async (
+  entityId: string,
+  entity: AttachmentEntity,
+  _actionState: AttachmentFormState,
+  formData: FormData
+): Promise<AttachmentFormState> => {
+
+  const validatedFields = createAttachmentsSchema.safeParse({
+    files: formData.getAll("files")
+  })
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors
+    }
+  }
+
+  const context = await requireAuth()
+  const { files } = validatedFields.data;
+
+  switch (entity) {
+    case AttachmentEntity.TICKET:
+      return await createTicketAttachment(entityId, files, context.profile.id)
+
+    case AttachmentEntity.TICKET:
+      return await createCommentAttachment(entityId, files, context.profile.id)
+
+    default:
+      return {
+        message: "Invalid entity type",
+        status: "error"
+      }
+  }
+
 }
 
 /**
