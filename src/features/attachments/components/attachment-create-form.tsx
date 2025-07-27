@@ -6,14 +6,16 @@ import { ACCEPTED_FILES, AttachmentFormState } from "../definitions";
 import { Input } from "@/components/ui/input";
 import SubmitButton from "@/components/form/submit-button-iconed";
 import { createAttachments } from "../actions/create-attachments";
+import { AttachmentEntity } from "@prisma/client";
 
 interface AttachmentCreateFormProps {
-  ticketId: string
+  entityId: string;
+  entity: AttachmentEntity
 }
 
-const AttachmentCreateForm = ({ ticketId }: AttachmentCreateFormProps) => {
+const AttachmentCreateForm = ({ entityId, entity }: AttachmentCreateFormProps) => {
   const initialState: AttachmentFormState = { message: "", errors: {}, status: "idle" }
-  const [actionState, action] = useActionState(createAttachments.bind(null, ticketId), initialState)
+  const [actionState, action] = useActionState(createAttachments.bind(null, entityId, entity), initialState)
 
   useEffect(() => {
     if (actionState.status === "success") {

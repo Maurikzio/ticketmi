@@ -3,14 +3,16 @@ import AttachmentCreateForm from "./attachment-create-form";
 import { getAttachments } from "../queries/get-attachments";
 import AttachmentItem from "./attachment-item";
 import AttachmentDeleteButton from "./attachment-delete-button";
+import { AttachmentEntity } from "@prisma/client";
 
 interface AttachmentsProps {
-  ticketId: string;
+  entityId: string;
   isOwner: boolean;
+  entity: AttachmentEntity
 }
 
-const Attachments = async ({ ticketId, isOwner }: AttachmentsProps) => {
-  const attachments = await getAttachments(ticketId);
+const Attachments = async ({ entityId, isOwner, entity }: AttachmentsProps) => {
+  const attachments = await getAttachments(entityId, entity);
   return (
     <CardCompact
       title="Attachments"
@@ -32,7 +34,7 @@ const Attachments = async ({ ticketId, isOwner }: AttachmentsProps) => {
               />
             ))}
           </div>
-          {isOwner ? <AttachmentCreateForm ticketId={ticketId} /> : null}
+          {isOwner ? <AttachmentCreateForm entityId={entityId} entity={entity} /> : null}
         </>
       }
     />
