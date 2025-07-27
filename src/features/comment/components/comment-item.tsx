@@ -2,6 +2,8 @@ import { Card } from "@/components/ui/card";
 import { CommentWithMetadata } from "../definitions";
 import CommentDeleteButton from "./comment-delete-button";
 import { format } from "date-fns"
+import { AttachmentEntity } from "@prisma/client";
+import AttachmentCreateButton from "@/features/attachments/components/attchment-create-button";
 
 interface CommentItemProps {
   comment: CommentWithMetadata
@@ -26,6 +28,7 @@ const CommentItem = ({ comment, isFromCurrentUser, handleDeleteComment }: Commen
         </div>
         <p className="whitespace-pre-line">{comment.content}</p>
       </Card>
+      {isFromCurrentUser ? <AttachmentCreateButton entityId={comment.id} entity={AttachmentEntity.COMMENT} /> : null}
       {isFromCurrentUser ? <CommentDeleteButton commentId={comment.id} handleDeleteComment={handleDeleteComment} /> : null}
     </div>
   )
