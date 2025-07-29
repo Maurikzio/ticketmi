@@ -10,14 +10,16 @@ import SubmitButton from "@/components/form/submit-button-iconed";
 
 interface AttachmentCreateButtonProps {
   entityId: string;
-  entity: AttachmentEntity
+  entity: AttachmentEntity;
+  refreshComments: () => void;
 }
 
-const AttachmentCreateButton = ({ entityId, entity }: AttachmentCreateButtonProps) => {
+const AttachmentCreateButton = ({ entityId, entity, refreshComments }: AttachmentCreateButtonProps) => {
   const [open, setOpen] = useState(false);
 
   const handleSuccess = () => {
     setOpen(false);
+    refreshComments()
   }
 
   const handleCancel = () => {

@@ -1,7 +1,6 @@
 'use client'
 
 import CardCompact from "@/components/card-compact";
-import CommentItem from "./comment-item";
 import CommentCreateform from "./comment-create-form";
 import { CommentWithMetadata } from "../definitions";
 import { Button } from "@/components/ui/button";
@@ -9,6 +8,7 @@ import { getComments } from "../queries/get-comments";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { LoaderCircle } from "lucide-react";
 import { useCallback } from "react";
+import { CommentList } from "./comment-list";
 interface CommentsProps {
   ticketId: string
   initialData?: {
@@ -65,14 +65,11 @@ const Comments = ({ ticketId, initialData, currentProfileId }: CommentsProps) =>
       {comments.length > 0 ? (
         <>
           <div className="flex flex-col gap-2 ml-8">
-            {comments.map(comment => (
-              <CommentItem
-                key={comment.id}
-                comment={comment}
-                isFromCurrentUser={currentProfileId === comment.author?.id}
-                handleDeleteComment={refreshComments}
-              />
-            ))}
+            <CommentList
+              comments={comments}
+              currentProfileId={currentProfileId}
+              handleDeleteComment={refreshComments}
+            />
           </div>
 
           {hasNextPage ? <div className="flex flex-col justify-center ml-8">

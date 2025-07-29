@@ -52,6 +52,7 @@ const useConfirmDialog = ({
     }
     // TODO: intentar memoizing callback
     // onSuccessAction in dependecy array is making this effect to re-run and producing double toast!!
+    // If we are not revalidating the path it will also make this effect to re-run again and again.
   }, [actionState, onSuccessAction])
 
   useEffect(() => {
