@@ -9,9 +9,10 @@ import { ParsedSearchParams } from "../definitions";
 interface TicketListProps {
   searchParams: ParsedSearchParams
   byOrganization?: boolean
+  byProfile?: boolean
 }
-const TicketList = async ({ searchParams, byOrganization }: TicketListProps) => {
-  const { list: tickets, metadata: ticketMetadata } = await getTickets(searchParams, byOrganization);
+const TicketList = async ({ searchParams, byOrganization, byProfile }: TicketListProps) => {
+  const { list: tickets, metadata: ticketMetadata } = await getTickets(searchParams, byOrganization, byProfile);
 
   const sortOptions = [
     { label: "Newest", value: "newest" },
