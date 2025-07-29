@@ -8,7 +8,8 @@ export type CommentWithMetadata = Prisma.CommentGetPayload<{
         userName: true,
         userLastname: true
       }
-    }
+    },
+    attachments: true
   }
 }>
 

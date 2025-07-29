@@ -23,7 +23,7 @@ export default async function Ticketspage({ searchParams }: TicketspageProps) {
       />
 
       <Suspense fallback={<Spinner />}>
-        <TicketList searchParams={searchParamsCache.parse(searchParams)} />
+        <TicketList searchParams={searchParamsCache.parse(searchParams)} byProfile={true} />
       </Suspense>
     </div>
   );

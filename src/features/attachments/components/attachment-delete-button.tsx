@@ -8,9 +8,10 @@ import { deleteAttachment } from "../actions/delete-attachment";
 
 interface AttachmentDeleteButtonProps {
   id: string;
+  onSuccess?: () => void;
 }
 
-const AttachmentDeleteButton = ({ id }: AttachmentDeleteButtonProps) => {
+const AttachmentDeleteButton = ({ id, onSuccess }: AttachmentDeleteButtonProps) => {
   const router = useRouter()
   const [deleteButton, deleteDialog] = useConfirmDialog({
     action: deleteAttachment.bind(null, id),
@@ -24,6 +25,7 @@ const AttachmentDeleteButton = ({ id }: AttachmentDeleteButtonProps) => {
       </Button>
     ),
     onSuccessAction: () => {
+      onSuccess?.()
       router.refresh()
     }
   })

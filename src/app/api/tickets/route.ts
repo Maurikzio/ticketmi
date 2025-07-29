@@ -8,6 +8,6 @@ export async function GET(request: Request) {
   const searchParamsPromise = Promise.resolve(Object.fromEntries(searchParams));
   const typedSearchParams: ParsedSearchParams = searchParamsCache.parse(searchParamsPromise);
 
-  const { list, metadata } = await getTickets(typedSearchParams, undefined);
+  const { list, metadata } = await getTickets(typedSearchParams, undefined, false);
   return Response.json({ list, metadata });
 }

@@ -10,19 +10,25 @@ import { AttachmentEntity } from "@prisma/client";
 
 interface AttachmentCreateFormProps {
   entityId: string;
-  entity: AttachmentEntity
+  entity: AttachmentEntity;
+  buttons?: React.ReactNode;
+  onSuccess?: () => void;
 }
 
-const AttachmentCreateForm = ({ entityId, entity }: AttachmentCreateFormProps) => {
+const AttachmentCreateForm = ({ entityId, entity, buttons, onSuccess }: AttachmentCreateFormProps) => {
   const initialState: AttachmentFormState = { message: "", errors: {}, status: "idle" }
   const [actionState, action] = useActionState(createAttachments.bind(null, entityId, entity), initialState)
 
   useEffect(() => {
     if (actionState.status === "success") {
       toast.error(actionState.message || "Success");
+      if (typeof onSuccess === "function") {
+        onSuccess()
+      }
     } else if (actionState.status === "error") {
       toast.error(actionState.message || "Something went wrong");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actionState])
 
   return (
@@ -43,7 +49,7 @@ const AttachmentCreateForm = ({ entityId, entity }: AttachmentCreateFormProps) =
           </p>
         ) : null}
       </div>
-      <SubmitButton label="Upload" />
+      {buttons || <SubmitButton label="Upload" />}
     </form >
   )
 }

@@ -5,7 +5,7 @@ import { getActiveOrganization } from "../../organization/query/get-active-organ
 import { getActiveUserOrganization } from "@/features/organization/query/get-active-user-organization";
 
 // export const getTickets = async (): Promise<Ticket[]> => {
-export const getTickets = async (searchParams: ParsedSearchParams, byOrganization?: boolean) => {
+export const getTickets = async (searchParams: ParsedSearchParams, byOrganization?: boolean, byProfile?: boolean) => {
   const { search, sort, page, size } = await searchParams;
   const profileData = await requireProfile();
   const activeOrganization = await getActiveOrganization();
@@ -14,7 +14,7 @@ export const getTickets = async (searchParams: ParsedSearchParams, byOrganizatio
   const take = size;
 
   const where = {
-    profileId: profileData?.profile.id,
+    ...(byProfile ? { profileId: profileData?.profile.id } : {}),
     title: {
       contains: search,
       mode: "insensitive" as const

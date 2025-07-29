@@ -193,7 +193,7 @@ export const createAttachments = async (
     case AttachmentEntity.TICKET:
       return await createTicketAttachment(entityId, files, context.profile.id)
 
-    case AttachmentEntity.TICKET:
+    case AttachmentEntity.COMMENT:
       return await createCommentAttachment(entityId, files, context.profile.id)
 
     default:
