@@ -26,6 +26,19 @@ model Profile {
   @@index([userId])
 }
 
+model Credential {
+  id         String    @id @default(cuid())
+  createdAt  DateTime  @default(now())
+  secretHash String    @unique
+  name       String
+  lastUsed   DateTime?
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+}
+
 model Organization {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
@@ -36,6 +49,7 @@ model Organization {
   members     UserOrganization[]
   tickets     Ticket[]
   invitations Invitation[]
+  credentials Credential[]
 }
 
 model UserOrganization {
