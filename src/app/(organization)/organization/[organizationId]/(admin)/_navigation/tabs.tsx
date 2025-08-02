@@ -1,7 +1,7 @@
 "use client"
 
 import Breadcrumbs from "@/components/breadrumbs";
-import { invitationsPath, organizationMembersPath, organizationsPath } from "@/paths";
+import { credentialsPath, invitationsPath, organizationMembersPath, organizationsPath } from "@/paths";
 import { useParams, usePathname } from "next/navigation";
 
 const OrganizationBreadcrumbs = () => {
@@ -11,7 +11,8 @@ const OrganizationBreadcrumbs = () => {
   const title = {
     members: "Members" as const,
     invitations: "Invitations" as const,
-  }[pathname.split('/').at(-1) as "members" | "invitations"];
+    credentials: "Credentials" as const,
+  }[pathname.split('/').at(-1) as "members" | "invitations" | "credentials"];
 
   return (
     <Breadcrumbs
@@ -23,6 +24,7 @@ const OrganizationBreadcrumbs = () => {
           dropdown: [
             { title: "Members", href: organizationMembersPath(params.organizationId) },
             { title: "Invitations", href: invitationsPath(params.organizationId) },
+            { title: "Credentials", href: credentialsPath(params.organizationId) },
           ]
         }
       ]}
