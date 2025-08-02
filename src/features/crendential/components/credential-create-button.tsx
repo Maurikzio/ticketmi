@@ -40,7 +40,7 @@ const CredentialCreateButton = ({ organizationId }: InvitationCreateButtonProps)
 
   useEffect(() => {
     if (actionState.status === 'success') {
-      toast.success(actionState.message)
+      toast.success(actionState.message, { duration: Infinity, closeButton: true })
       handleClose()
       // router.push("/tickets");
     } else if (actionState.status === "error") {
