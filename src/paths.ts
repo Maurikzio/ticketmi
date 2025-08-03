@@ -16,6 +16,7 @@ export const accountPasswordPath = "/account/password"
 export const organizationsPath = "/organization"
 export const organizationCreatePath = "/organization/create"
 export const organizationMembersPath = (organizationId: string) => `/organization/${organizationId}/members`
+export const credentialsPath = (organizationId: string) => `/organization/${organizationId}/credentials`
 
 export const invitationsPath = (organizationId: string) => `/organization/${organizationId}/invitations`
 
@@ -25,3 +26,4 @@ export const selectActiveOrganizationPath = "/onboarding/select-active-organizat
 export const emailInvitationPath = "/email-invitation"
 
 export const attachmentDownloadPath = (attachmentId: string) => `/api/aws/s3/attachments/${attachmentId}`
+
