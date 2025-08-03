@@ -3,12 +3,17 @@ import { ParsedSearchParams } from "../definitions";
 import { requireProfile } from "@/features/auth/utils/requireProfile";
 import { getActiveOrganization } from "../../organization/query/get-active-organization";
 import { getActiveUserOrganization } from "@/features/organization/query/get-active-user-organization";
+import { PAGE_SIZES } from "../constants";
 
 // export const getTickets = async (): Promise<Ticket[]> => {
 export const getTickets = async (searchParams: ParsedSearchParams, byOrganization?: boolean, byProfile?: boolean) => {
   const { search, sort, page, size } = await searchParams;
   const profileData = await requireProfile();
   const activeOrganization = await getActiveOrganization();
+
+  if (!PAGE_SIZES.includes(size)) {
+    throw new Error("Invalid page size")
+  }
 
   const skip = page * size;
   const take = size;
