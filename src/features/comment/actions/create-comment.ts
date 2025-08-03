@@ -7,6 +7,7 @@ import { redirect } from "next/navigation"
 import { CommentFormState } from "../definitions"
 import { z } from "zod"
 import { revalidatePath } from "next/cache"
+import canUserCreateComment from "../utils/can-user-create-comment"
 
 const createCommentSchema = z.object({
   content: z.string().min(1).max(1024)
@@ -26,6 +27,12 @@ export const createComment = async (ticketId: string, _actionState: CommentFormS
 
   if (!profile) {
     redirect(signInPath)
+  }
+
+  const canUserComment = await canUserCreateComment(profile.id);
+
+  if (!canUserComment) {
+    return { message: "Monthly comment limit exceeded (5 comments per month)", status: "error" }
   }
 
   const validatedFields = createCommentSchema.safeParse({
