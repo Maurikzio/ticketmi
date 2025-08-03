@@ -19,7 +19,7 @@ const CommentCreateform = ({ ticketId, onSucessAction }: CommentCreateformProps)
   useEffect(() => {
     if (actionState.status === "success" && actionState.data) {
       onSucessAction?.(actionState.data as CommentWithMetadata)
-      toast.error(actionState.message || "Something went wrong");
+      toast.success(actionState.message || "Something went wrong");
     } else if (actionState.status === "error") {
       toast.error(actionState.message || "Something went wrong");
     }
